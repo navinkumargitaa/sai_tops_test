@@ -13,7 +13,7 @@ __author__ = "navin@gitaa.in"
 import pandas as pd
 from orm.archery import ArcheryCompetitionRanking, Base
 from model.archery import sai_db_engine
-from services.archery.ranking_processing import get_competition_ranking
+from services.archery.analysis import get_competition_ranking
 from sqlalchemy.orm import sessionmaker
 
 def main():
