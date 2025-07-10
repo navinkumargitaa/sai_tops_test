@@ -11,8 +11,8 @@ def main():
     # Step 1: Read data
     df = read_singles_tournament_finishes()
 
-    # Step 2: Generate summaries
     summaries = generate_tournament_summary(df)
+    # Step 2: Generate summaries
 
     # Step 3: Save as CSVs
     for year, df_year in summaries.items():
@@ -26,7 +26,7 @@ def main():
     # Step 5: Save to database
     save_summary_to_db(summaries)
 
-    print("✅ All summaries inserted into MySQL.")
+    print("All summaries inserted into MySQL.")
 
 if __name__ == "__main__":
     main()
