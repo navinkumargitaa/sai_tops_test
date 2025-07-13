@@ -96,7 +96,7 @@ def read_archery_elem_results():
     """
     athlete_ids = [8734, 5354, 42056, 22125, 39665, 39157, 17262, 43889, 45025, 31020, 17287, 45024, 27737, 27738]
 
-    # Convert the list of IDs into a comma-separated string
+    # Convert the list of IDs into a comma-separated string - yes
     id_list_str = ", ".join(map(str, athlete_ids))
 
     query = f"""
