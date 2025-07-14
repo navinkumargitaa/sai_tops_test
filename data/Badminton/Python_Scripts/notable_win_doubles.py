@@ -15,15 +15,20 @@ mysql_connection = mysql.connector.connect(
 
 """
 query for getting the latest rank of the players
-query = SELECT athlete_id, ranking_category, date, world_ranking
-FROM sai_badminton_viz_final.badminton_ranking_graph_ind
-WHERE ranking_category IN ('MENS_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES')
-  AND date = (
-    SELECT MAX(date)
-    FROM sai_badminton_viz_final.badminton_ranking_graph_ind
-    WHERE ranking_category IN ('MENS_SINGLES', 'WOMEN_SINGLES','MIXED_DOUBLES')
-  )
-ORDER BY date DESC;
+query = SELECT 
+  a.athlete_1_id,
+  a.athlete_2_id,
+  b.team_id,
+  b.ranking_category,
+  b.date,
+  b.world_ranking
+FROM sai_badminton_viz_final.badminton_doubles a
+JOIN sai_badminton_viz_final.badminton_ranking_graph_team b
+  ON a.row_id = b.team_id
+WHERE b.date = (
+  SELECT MAX(date)
+  FROM sai_badminton_viz_final.badminton_ranking_graph_team
+);
 """
 
 
