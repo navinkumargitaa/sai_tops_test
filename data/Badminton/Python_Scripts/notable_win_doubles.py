@@ -13,6 +13,21 @@ mysql_connection = mysql.connector.connect(
     database="sai_badminton_viz_final"
 )
 
+"""
+query for getting the latest rank of the players
+query = SELECT athlete_id, ranking_category, date, world_ranking
+FROM sai_badminton_viz_final.badminton_ranking_graph_ind
+WHERE ranking_category IN ('MENS_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES')
+  AND date = (
+    SELECT MAX(date)
+    FROM sai_badminton_viz_final.badminton_ranking_graph_ind
+    WHERE ranking_category IN ('MENS_SINGLES', 'WOMEN_SINGLES','MIXED_DOUBLES')
+  )
+ORDER BY date DESC;
+"""
+
+
+
 # Load all doubles ranking data from the ranking table
 doubles_ranking_query = "SELECT * FROM sai_badminton_viz_final.doubles_rankings;"
 doubles_ranking_df = pd.read_sql(doubles_ranking_query, mysql_connection)
