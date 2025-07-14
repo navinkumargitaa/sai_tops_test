@@ -29,8 +29,8 @@ ORDER BY date DESC;
 
 
 # Load all doubles ranking data from the ranking table
-doubles_ranking_query = "SELECT * FROM sai_badminton_viz_final.doubles_rankings;"
-doubles_ranking_df = pd.read_sql(doubles_ranking_query, mysql_connection)
+doubles_ranking_map_query = "SELECT * FROM sai_badminton_viz_final.doubles_rankings;"
+doubles_ranking_map_df = pd.read_sql(doubles_ranking_map_query, mysql_connection)
 
 # Load the match data by joining athlete, team, and tournament tables
 master_query = """
@@ -73,9 +73,9 @@ def fetch_team_rank_from_dataframe(player1_id: int, player2_id: int):
     Looks up the doubles ranking for a team based on both player IDs.
     Returns the rank if found, else None.
     """
-    row = doubles_ranking_df[
-        ((doubles_ranking_df['player1_id'] == player1_id) & (doubles_ranking_df['player2_id'] == player2_id)) |
-        ((doubles_ranking_df['player1_id'] == player2_id) & (doubles_ranking_df['player2_id'] == player1_id))
+    row = doubles_ranking_map_df[
+        ((doubles_ranking_map_df['player1_id'] == player1_id) & (doubles_ranking_map_df['player2_id'] == player2_id)) |
+        ((doubles_ranking_map_df['player1_id'] == player2_id) & (doubles_ranking_map_df['player2_id'] == player1_id))
     ]
     return row['rank'].iloc[0] if not row.empty else None
 
