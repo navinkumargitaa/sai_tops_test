@@ -56,6 +56,20 @@ class NotableWins2025(NotableWinsBase):
 # Create the tables in the database
 Base.metadata.create_all(engine)
 
+"""
+sql query for getting the latest rank of the athlete
+
+query = SELECT athlete_id, ranking_category, date, world_ranking
+FROM sai_badminton_viz_final.badminton_ranking_graph_ind
+WHERE ranking_category IN ('MENS_SINGLES', 'WOMEN_SINGLES')
+  AND date = (
+    SELECT MAX(date)
+    FROM sai_badminton_viz_final.badminton_ranking_graph_ind
+    WHERE ranking_category IN ('MENS_SINGLES', 'WOMEN_SINGLES')
+  )
+ORDER BY date DESC;
+"""
+
 def load_athlete_rank_map() -> dict:
     """Loads the athlete ranking data from the database and returns a dictionary mapping player_id to rank."""
     df = pd.read_sql("SELECT player_id, `rank` FROM badminton_singles_rankings", con=engine)
