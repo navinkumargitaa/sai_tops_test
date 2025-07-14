@@ -1,12 +1,11 @@
 """
-archery_ranking_october.py
-
 SQLAlchemy ORM model for the 'archery_ranking_progression_viz' table in the database.
-This table stores each athlete's ranking snapshot as of the end of October each year.
+This table stores each athlete's ranking progression snapshot as of the end of October each year.
 
 Date: 2025-07-08
 """
-__author__= "navin@gitaa.in"
+
+__author__ = "navin@gitaa.in"
 
 from sqlalchemy import Column, Integer, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,32 +14,31 @@ Base = declarative_base()
 
 class ArcheryRankingProgression(Base):
     """
-    ORM model for the 'archery_ranking_october' table.
-    Stores an athlete's ranking snapshot as of end of October each year.
+    ORM model for the 'archery_ranking_progression_viz' table.
+
+    Stores yearly snapshots of athlete rankings and associated points
+    as of the end of October for longitudinal performance tracking.
+
+    Attributes:
+        id (int): Primary key.
+        athlete_id (int): Unique identifier for the athlete.
+        year (int): Year of the ranking snapshot.
+        rank (int): Rank of the athlete at that time.
+        points (float): Points held by the athlete.
+        rank_date_issued (date): Date on which the ranking was officially issued.
     """
     __tablename__ = 'archery_ranking_progression_viz'
 
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Unique record ID
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    athlete_id = Column(Integer, nullable=False)  # Athlete's unique ID
 
-    # Athlete_ID
-    athlete_id = Column(Integer, nullable=False)
+    year = Column(Integer, nullable=False)  # Ranking year (e.g., 2023)
 
-    # Ranking year
-    year = Column(Integer, nullable=False)
+    rank = Column(Integer)  # Athlete's rank at end of October
 
-    # Rank of the Athlete
-    rank = Column(Integer)
+    points = Column(Float)  # Total points earned by the athlete
 
-    # Athlete Points
-    points = Column(Float)
+    rank_date_issued = Column(Date)  # Date when the rank was published
 
-    # Rank issue date
-    rank_date_issued = Column(Date)
 
-    def __repr__(self):
-        return (
-            f"<ArcheryRankingProgression(id={self.id}, athlete_id={self.athlete_id}, "
-            f"year={self.year}, rank={self.rank}, points={self.points}, "
-            f"rank_date_issued={self.rank_date_issued})>"
-        )

@@ -1,12 +1,13 @@
 """
 archery_ranking_october.py
 
-SQLAlchemy ORM model for the 'competition_ranking_viz' table in the database.
+SQLAlchemy ORM model for the 'archery_competition_ranking_viz' table in the database.
 This table stores each athlete's ranking snapshot as of the end of October each year.
 
 Date: 2025-07-08
 """
-__author__= "navin@gitaa.in"
+
+__author__ = "navin@gitaa.in"
 
 from sqlalchemy import Column, Integer, Date, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,43 +16,38 @@ Base = declarative_base()
 
 class ArcheryCompetitionRanking(Base):
     """
-    ORM model for the 'archery_ranking_october' table.
-    Stores an athlete's ranking snapshot as of end of October each year.
+    ORM model for the 'archery_competition_ranking_viz' table.
+
+    Stores a snapshot of each athlete's competition ranking as of the end of October
+    every year. Useful for seasonal comparisons and performance tracking.
+
+    Attributes:
+        id (int): Primary key.
+        athlete_id (int): Unique ID of the athlete.
+        comp_id (int): Unique ID of the competition.
+        comp_full_name (str): Full name of the competition.
+        comp_short_name (str): Original short name of the competition.
+        comp_new_short_name (str): Cleaned/renamed short name for visualization.
+        comp_place (str): Location where the competition was held.
+        comp_date (date): Date associated with the ranking.
+        comp_rank (int): Athlete's rank in the competition.
     """
     __tablename__ = 'archery_competition_ranking_viz'
 
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Unique record identifier
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    athlete_id = Column(Integer, nullable=False)  # Athlete's unique identifier
 
-    # Athlete ID
-    athlete_id = Column(Integer, nullable=False)
+    comp_id = Column(Integer, nullable=False)  # Unique ID of the competition
 
-    # Competition ID
-    comp_id = Column(Integer, nullable=False)
+    comp_full_name = Column(String(255), nullable=False)  # Full name of the competition
 
-    # Competition full name
-    comp_full_name = Column(String(255), nullable=False)
+    comp_short_name = Column(String(100), nullable=False)  # Short name (possibly from source)
 
-    # Competition full name
-    comp_short_name = Column(String(100), nullable=False)
+    comp_new_short_name = Column(String(100), nullable=False)  # Cleaned short name for charts
 
-    # Competition full name
-    comp_new_short_name = Column(String(100), nullable=False)
+    comp_place = Column(String(100), nullable=False)  # Location of the competition
 
-    # Competition place
-    comp_place = Column(String(100), nullable=False)
+    comp_date = Column(Date)  # Date when the rank was issued
 
-    # Rank issue date
-    comp_date = Column(Date)
-
-    # Competition short name
-    comp_rank = Column(Integer)
-
-
-
-    # def __repr__(self):
-    #     return (
-    #         f"<ArcheryRankingProgression(id={self.id}, athlete_id={self.athlete_id}, "
-    #         f"year={self.year}, rank={self.rank}, points={self.points}, "
-    #         f"rank_date_issued={self.rank_date_issued})>"
-    #     )
+    comp_rank = Column(Integer)  # Athlete's rank in the competition
