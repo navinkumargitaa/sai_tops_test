@@ -65,10 +65,19 @@ def get_competition_ranking():
     # Step 2: Convert date column to datetime
     df['comp_date'] = pd.to_datetime(df['comp_date'])
 
-    # Step 3: Generate visualization-friendly short name
-    df['comp_new_short_name'] = df['comp_place'] + ' ' + df['comp_date'].dt.year.astype(str)
+    # Step 3: Fill empty comp_short_name
+    df['comp_short_name'] = df['comp_short_name'].fillna('').str.strip()
+
+    # Apply transformation only to rows with missing or empty comp_short_name
+    mask = df['comp_short_name'] == ''
+    df.loc[mask, 'comp_short_name'] = (
+        df.loc[mask, 'comp_full_name'].str.split().str[:3].str.join(' ') + " - " +
+        df.loc[mask, 'comp_place'].fillna('Unknown') + " " +
+        df.loc[mask, 'comp_date'].dt.year.astype(str)
+    )
 
     return df
+
 
 
 def compute_avg_arrow_score(sp_str):
