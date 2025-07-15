@@ -40,7 +40,7 @@ doubles_ranking_map_df = pd.read_sql(doubles_ranking_map_query, mysql_connection
 # Load the match data by joining athlete, team, and tournament tables
 master_query = """
 SELECT DISTINCT 
-    b.team_id,
+    a.row_id AS team_id,
     c.athlete_id,
     c.tournament_id,
     c.round_name AS final_position,
@@ -59,8 +59,6 @@ SELECT DISTINCT
     d.grade AS tournament_grade,
     d.year AS tournament_year
 FROM sai_badminton_viz_final.badminton_doubles AS a
-JOIN sai_badminton_viz_final.badminton_team_ranking AS b
-    ON a.points = b.points AND a.tournaments = b.tournaments
 JOIN sai_badminton_viz_final.badminton_athlete_match AS c
     ON a.athlete_1_id = c.athlete_id
 JOIN sai_badminton_viz_final.badminton_athlete_tournament AS d
