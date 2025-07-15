@@ -1,22 +1,22 @@
 import pandas as pd
+import re
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
-# Connect to the MySQL database
+# Connect to MySQL
 DATABASE_URL = "mysql+pymysql://root:harsha123%40@localhost/sai_badminton_viz_final"
 Base = declarative_base()
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Define ORM models for the required tables
-
+# ORM Classes
 class AthleteTournament(Base):
     __tablename__ = "badminton_athlete_tournament"
     tournament_id = Column(Integer, primary_key=True)
     name = Column(String(255))
     grade = Column(String(50))
-    date = Column(Date)
+    date = Column(String(50))  # Dates like '03 - 08 June'
     year = Column(Integer)
 
 class AthleteMatch(Base):
@@ -31,10 +31,8 @@ class AthleteMatch(Base):
     team_2_player_1_id = Column(Integer)
     team_2_player_1_name = Column(String(255))
     draw_name_full = Column(String(100))
-
     tournament = relationship("AthleteTournament")
 
-# Base class for storing notable wins data
 class NotableWinsBase(Base):
     __abstract__ = True
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -43,17 +41,16 @@ class NotableWinsBase(Base):
     final_position = Column(String(50))
     tournament_grade = Column(String(50))
     tournament_year = Column(Integer)
+    tournament_date = Column(Date)
     notable_wins = Column(String(1000))
     lost_to = Column(String(1000))
 
-# Tables for different years
 class NotableWins2024(NotableWinsBase):
     __tablename__ = "badminton_prv_yr_notable_wins_singles"
 
 class NotableWins2025(NotableWinsBase):
     __tablename__ = "badminton_curr_yr_notable_wins_singles"
 
-# Create the tables in the database
 Base.metadata.create_all(engine)
 
 """
@@ -70,19 +67,19 @@ WHERE ranking_category IN ('MENS_SINGLES', 'WOMEN_SINGLES')
 ORDER BY date DESC;
 """
 
-def load_athlete_rank_map() -> dict:
-    """Loads the athlete ranking data from the database and returns a dictionary mapping player_id to rank."""
+
+# Load Rankings
+def load_athlete_rank_map():
     df = pd.read_sql("SELECT player_id, `rank` FROM badminton_singles_rankings", con=engine)
     df['player_id'] = pd.to_numeric(df['player_id'], errors='coerce')
     df['rank'] = pd.to_numeric(df['rank'], errors='coerce')
     return dict(zip(df['player_id'], df['rank']))
 
-# Load required data
 athlete_rank_map = load_athlete_rank_map()
 athlete_ids = [83950, 68870, 73173, 69093, 59687, 74481, 58664, 68322, 99042, 91807, 97168, 70595, 82572]
 round_priority_order = ['R32', 'R16', 'QF', 'SF', 'F']
 
-# Fetch match data for the target athletes
+# Fetch match data
 results = (
     session.query(
         AthleteMatch.athlete_id,
@@ -104,7 +101,6 @@ results = (
     .all()
 )
 
-# Convert the fetched results to a DataFrame
 df = pd.DataFrame(results, columns=[
     "athlete_id", "tournament_id", "tournament_name", "final_position",
     "tournament_grade", "tournament_date", "tournament_year", "winner",
@@ -112,8 +108,25 @@ df = pd.DataFrame(results, columns=[
     "team_2_player_1_id", "team_2_player_1_name", "category"
 ])
 
-def determine_win_loss(row: pd.Series) -> pd.Series:
-    """Checks who won or lost the match and whether it's a notable win or not based on rank difference."""
+# Fix tournament date to real end date using regex
+parsed_dates = []
+for i in range(len(df)):
+    date_str = df.loc[i, 'tournament_date']
+    year = df.loc[i, 'tournament_year']
+    match = re.search(r'-\s*(\d{1,2})\s+([A-Za-z]+)', str(date_str))
+    if match:
+        day = match.group(1)
+        month = match.group(2)
+        full_date = f"{day} {month} {year}"
+        parsed_date = pd.to_datetime(full_date, format="%d %B %Y", errors='coerce')
+    else:
+        parsed_date = pd.to_datetime(date_str, errors='coerce')
+    parsed_dates.append(parsed_date)
+
+df['parsed_date'] = parsed_dates
+
+# Determine win/loss
+def determine_win_loss(row):
     aid = row['athlete_id']
     winner = row['winner']
     t1, t2 = row['team_1_player_1_id'], row['team_2_player_1_id']
@@ -138,24 +151,23 @@ def determine_win_loss(row: pd.Series) -> pd.Series:
     else:
         return pd.Series([opponent_display, athlete_display, "", opponent_display])
 
-# Apply win/loss logic to each row
 df[['win', 'loss', 'notable_win', 'lost_to']] = df.apply(determine_win_loss, axis=1)
 df = df[df['winner'] != 0]
 df['tournament_grade'] = df['tournament_grade'].fillna("G1_CC")
 
-# Filter only relevant athletes and rounds
 filtered_df = df[df['athlete_id'].isin(athlete_ids)]
 filtered_df = filtered_df[filtered_df['final_position'].isin(round_priority_order)]
 
-def summarize(group: pd.DataFrame) -> pd.Series:
-    """Summarizes the best finish, notable wins, and losses for each athlete in a tournament."""
+# Summarize per athlete & tournament
+def summarize(group):
     group['round_rank'] = group['final_position'].apply(
         lambda r: round_priority_order.index(r.upper()) if r.upper() in round_priority_order else -1
     )
     if group['round_rank'].max() == -1:
         return None
 
-    best = group.loc[group['round_rank'].idxmax()]
+    group = group.sort_values(by='parsed_date', ascending=False)
+    best = group.iloc[0]
     wins = ", ".join(group['notable_win'].dropna().loc[group['notable_win'] != ""])
     losses = ", ".join(group['lost_to'].dropna().loc[group['lost_to'] != ""])
     return pd.Series({
@@ -164,11 +176,11 @@ def summarize(group: pd.DataFrame) -> pd.Series:
         "final_position": best['final_position'],
         "tournament_grade": best['tournament_grade'],
         "tournament_year": best['tournament_year'],
+        "tournament_date": best['parsed_date'],
         "notable_wins": wins,
         "lost_to": losses
     })
 
-# Generate the summary DataFrame for each player in each tournament
 summary_df = (
     filtered_df.groupby(['athlete_id', 'tournament_name'])
     .apply(summarize)
@@ -176,25 +188,30 @@ summary_df = (
     .reset_index(drop=True)
 )
 
+summary_df['tournament_year'] = summary_df['tournament_year'].astype(int)
 summary_df['athlete_id'] = summary_df['athlete_id'].astype(int)
-summary_df['tournament_year'] = pd.to_numeric(summary_df['tournament_year'], errors='coerce').astype(int)
+summary_df['tournament_date'] = pd.to_datetime(summary_df['tournament_date'], errors='coerce')
 
-def save_and_insert(year: int, model_class) -> None:
-    """Saves the summary to a CSV file and inserts the records into the corresponding database table."""
+summary_df = summary_df.sort_values(by=['athlete_id', 'tournament_date'], ascending=[True, False])
+
+# Save & insert
+def save_and_insert(year, model_class):
     year_df = summary_df[
         (summary_df['tournament_year'] == year) &
         (summary_df['lost_to'].str.strip() != "")
-    ]
+    ].copy()
+
+    year_df['tournament_date'] = year_df['tournament_date'].dt.strftime('%d-%b-%Y')
     year_df.to_csv(f"singles_notable_wins_{year}.csv", index=False)
-    print(f"Saved → singles_notable_wins_{year}.csv")
 
     records = [
         model_class(
-            athlete_id=int(row['athlete_id']),
+            athlete_id=row['athlete_id'],
             tournament_name=row['tournament_name'],
             final_position=row['final_position'],
             tournament_grade=row['tournament_grade'],
-            tournament_year=int(row['tournament_year']),
+            tournament_year=row['tournament_year'],
+            tournament_date=pd.to_datetime(row['tournament_date'], format="%d-%b-%Y"),
             notable_wins=row['notable_wins'],
             lost_to=row['lost_to']
         )
@@ -202,12 +219,8 @@ def save_and_insert(year: int, model_class) -> None:
     ]
     session.add_all(records)
     session.commit()
-    print(f"Inserted {len(records)} records into `{model_class.__tablename__}`")
+    print(f"Inserted {len(records)} into {model_class.__tablename__}")
 
-# Save and insert results for both years
 save_and_insert(2024, NotableWins2024)
 save_and_insert(2025, NotableWins2025)
-
-# Close the session once everything is done
 session.close()
-
