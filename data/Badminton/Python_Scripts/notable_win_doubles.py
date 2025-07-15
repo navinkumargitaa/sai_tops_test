@@ -34,14 +34,17 @@ SELECT DISTINCT
 FROM sai_badminton_viz_final.badminton_doubles a
 JOIN sai_badminton_viz_final.badminton_athlete_match c ON a.athlete_1_id = c.athlete_id
 JOIN sai_badminton_viz_final.badminton_athlete_tournament d ON c.tournament_id = d.tournament_id;
-""",con = engine)
+""", engine)
 
 # Filter only selected team IDs
 selected_team_ids = [1, 2, 61, 116]
 match_df = match_df[match_df['team_id'].isin(selected_team_ids)]
 
 # Helper to get rank
-def get_team_rank(p1, p2):
+def get_team_rank(team):
+    if len(team) != 2:
+        return None
+    p1, p2 = team
     row = ranking_df[((ranking_df['player1_id'] == p1) & (ranking_df['player2_id'] == p2)) |
                      ((ranking_df['player1_id'] == p2) & (ranking_df['player2_id'] == p1))]
     return row['rank'].iloc[0] if not row.empty else None
@@ -51,28 +54,28 @@ def convert_date(date_text):
     try:
         end_part = date_text.split("-")[1].strip()
         day, month = end_part.split()
-        return str(int(day)) + " " + month
+        return f"{int(day)} {month}"
     except:
         return date_text
 
 match_df["tournament_date"] = match_df["date"].apply(convert_date)
 
 # Fix data types
-for col in ['athlete_id', 'team_1_player_1_id', 'team_1_player_2_id', 'team_2_player_1_id', 'team_2_player_2_id']:
-    match_df[col] = pd.to_numeric(match_df[col], errors='coerce').astype('Int64')
+cols = ['athlete_id', 'team_1_player_1_id', 'team_1_player_2_id', 'team_2_player_1_id', 'team_2_player_2_id']
+match_df[cols] = match_df[cols].apply(pd.to_numeric, errors='coerce').astype('Int64')
 
 # Determine win/loss
 def determine_win_loss(row):
     athlete_id = row['athlete_id']
     winner = row['winner']
-    t1 = [row['team_1_player_1_id'], row['team_1_player_2_id']]
-    t2 = [row['team_2_player_1_id'], row['team_2_player_2_id']]
+    t1 = [x for x in [row['team_1_player_1_id'], row['team_1_player_2_id']] if pd.notna(x)]
+    t2 = [x for x in [row['team_2_player_1_id'], row['team_2_player_2_id']] if pd.notna(x)]
 
-    team1_name = f"{row['team_1_player_1_name']} & {row['team_1_player_2_name']}"
-    team2_name = f"{row['team_2_player_1_name']} & {row['team_2_player_2_name']}"
+    team1_name = f"{row['team_1_player_1_name'] or ''} & {row['team_1_player_2_name'] or ''}"
+    team2_name = f"{row['team_2_player_1_name'] or ''} & {row['team_2_player_2_name'] or ''}"
 
-    team1_rank = get_team_rank(*t1)
-    team2_rank = get_team_rank(*t2)
+    team1_rank = get_team_rank(t1)
+    team2_rank = get_team_rank(t2)
 
     if athlete_id in t1:
         athlete_team = 1
@@ -85,11 +88,11 @@ def determine_win_loss(row):
     else:
         return pd.Series(["Unknown", "Unknown", "", ""])
 
-    athlete_display = f"{athlete_name} ({athlete_rank})" if athlete_rank else athlete_name
-    opponent_display = f"{opponent_name} ({opponent_rank})" if opponent_rank else opponent_name
+    athlete_display = f"{athlete_name} ({athlete_rank})" if pd.notna(athlete_rank) else athlete_name
+    opponent_display = f"{opponent_name} ({opponent_rank})" if pd.notna(opponent_rank) else opponent_name
 
     if winner == athlete_team:
-        notable_win = opponent_display if opponent_rank and athlete_rank and opponent_rank < athlete_rank else ""
+        notable_win = opponent_display if pd.notna(opponent_rank) and pd.notna(athlete_rank) and opponent_rank < athlete_rank else ""
         return pd.Series([athlete_display, opponent_display, notable_win, ""])
     else:
         return pd.Series([opponent_display, athlete_display, "", opponent_display])
@@ -101,25 +104,29 @@ match_df['tournament_grade'] = match_df['tournament_grade'].fillna("G1_CC")
 
 # Round ranking
 round_order = {'R32': 1, 'R16': 2, 'QF': 3, 'SF': 4, 'F': 5}
-match_df['round_rank'] = 0
-for round_name, rank_value in round_order.items():
-    match_df.loc[match_df['round_name'] == round_name, 'round_rank'] = rank_value
+match_df['round_rank'] = match_df['round_name'].map(round_order).fillna(0).astype(int)
 
 # Main athlete label based on team
-
 def get_main_athlete_name(row):
     athlete_id = row['athlete_id']
-    if athlete_id in [row['team_1_player_1_id'], row['team_1_player_2_id']]:
-        return row['team_1_player_1_name'] + ' / ' + row['team_1_player_2_name']
-    elif athlete_id in [row['team_2_player_1_id'], row['team_2_player_2_id']]:
-        return row['team_2_player_1_name'] + ' / ' + row['team_2_player_2_name']
+    t1_ids = [x for x in [row['team_1_player_1_id'], row['team_1_player_2_id']] if pd.notna(x)]
+    t2_ids = [x for x in [row['team_2_player_1_id'], row['team_2_player_2_id']] if pd.notna(x)]
+
+    if athlete_id in t1_ids:
+        name1 = row['team_1_player_1_name'] or ""
+        name2 = row['team_1_player_2_name'] or ""
+        return f"{name1} & {name2}"
+    elif athlete_id in t2_ids:
+        name1 = row['team_2_player_1_name'] or ""
+        name2 = row['team_2_player_2_name'] or ""
+        return f"{name1} & {name2}"
     return "UNKNOWN"
 
 match_df['main_athlete_name'] = match_df.apply(get_main_athlete_name, axis=1)
 
 # Combine names
 def combine_names(series):
-    return ", ".join(sorted(set(name for name in series if name)))
+    return ", ".join(sorted(set(filter(None, series))))
 
 # Summarize
 summary_df = (
@@ -133,7 +140,7 @@ summary_df = (
     .reset_index()
 )
 
-# Parse datetime using normal function
+# Parse datetime
 def parse_date(row):
     try:
         return datetime.strptime(f"{row['tournament_date']} {row['year']}", "%d %B %Y")
@@ -145,11 +152,11 @@ summary_df["parsed_date"] = summary_df.apply(parse_date, axis=1)
 # Save 2024
 summary_2024 = summary_df[summary_df["year"] == 2024].sort_values(by=["team_id", "parsed_date"], ascending=[True, False])
 if not summary_2024.empty:
-    summary_2024.drop(columns=["parsed_date"]).to_csv("tournament_summary_doubles_2024.csv", index=False)
+    summary_2024.drop(columns=["parsed_date"]).to_csv("notable_wins_doubles_2024.csv", index=False)
     print("Saved: tournament_summary_doubles_2024.csv")
 
 # Save 2025
 summary_2025 = summary_df[summary_df["year"] == 2025].sort_values(by=["team_id", "parsed_date"], ascending=[True, False])
 if not summary_2025.empty:
-    summary_2025.drop(columns=["parsed_date"]).to_csv("tournament_summary_doubles_2025.csv", index=False)
+    summary_2025.drop(columns=["parsed_date"]).to_csv("notable_wins_doubles_2025.csv", index=False)
     print("Saved: tournament_summary_doubles_2025.csv")
