@@ -1,0 +1,634 @@
+,athlete_id,athlete_name,competition_id,comp_name,comp_date,comp_year,type_arrow_avg,arrow_average
+0,27738,Prathamesh Samadhan Jawkar,28887,Kamnik 2025 Veronica’s Cup,2025-05-22,2025,qualification,9.86
+1,22125,Dhiraj Bommadevara,26294,Shanghai 2025,2025-05-06,2025,qualification,9.4
+2,31020,Parth Sushant Salunkhe,26294,Shanghai 2025,2025-05-06,2025,qualification,9.04
+3,8734,Deepika Kumari,26294,Shanghai 2025,2025-05-06,2025,qualification,9.1
+4,17262,Ankita Bhakat,26294,Shanghai 2025,2025-05-06,2025,qualification,9.06
+5,17287,Simranjeet Kaur,26294,Shanghai 2025,2025-05-06,2025,qualification,8.85
+6,5354,Abhishek Verma,26294,Shanghai 2025,2025-05-06,2025,qualification,9.92
+7,39157,Ojas Pravin Deotale,26294,Shanghai 2025,2025-05-06,2025,qualification,9.82
+8,43889,Aditi Gopichand Swami,26294,Shanghai 2025,2025-05-06,2025,qualification,9.71
+9,22125,Dhiraj Bommadevara,26293,Central Florida 2025,2025-04-08,2025,qualification,9.25
+10,31020,Parth Sushant Salunkhe,26293,Central Florida 2025,2025-04-08,2025,qualification,8.89
+11,17262,Ankita Bhakat,26293,Central Florida 2025,2025-04-08,2025,qualification,8.88
+12,8734,Deepika Kumari,26293,Central Florida 2025,2025-04-08,2025,qualification,8.86
+13,17287,Simranjeet Kaur,26293,Central Florida 2025,2025-04-08,2025,qualification,8.47
+14,5354,Abhishek Verma,26293,Central Florida 2025,2025-04-08,2025,qualification,9.68
+15,39157,Ojas Pravin Deotale,26293,Central Florida 2025,2025-04-08,2025,qualification,9.65
+16,43889,Aditi Gopichand Swami,28444,2024 Asian Youth - Taipei 2024,2024-09-27,2024,qualification,9.49
+17,5354,Abhishek Verma,26030,Lac La Biche 2024,2024-09-16,2024,qualification,11.39
+18,22125,Dhiraj Bommadevara,23176,Paris 2024 Olympics,2024-07-25,2024,qualification,9.46
+19,17262,Ankita Bhakat,23176,Paris 2024 Olympics,2024-07-25,2024,qualification,9.25
+20,45025,Bhajan Kaur,23176,Paris 2024 Olympics,2024-07-25,2024,qualification,9.15
+21,8734,Deepika Kumari,23176,Paris 2024 Olympics,2024-07-25,2024,qualification,9.14
+22,22125,Dhiraj Bommadevara,26292,Antalya 2024,2024-06-18,2024,qualification,9.57
+23,45025,Bhajan Kaur,26292,Antalya 2024,2024-06-18,2024,qualification,9.15
+24,8734,Deepika Kumari,26292,Antalya 2024,2024-06-18,2024,qualification,9.1
+25,17262,Ankita Bhakat,26292,Antalya 2024,2024-06-18,2024,qualification,8.9
+26,42056,Priyansh ,26292,Antalya 2024,2024-06-18,2024,qualification,9.86
+27,5354,Abhishek Verma,26292,Antalya 2024,2024-06-18,2024,qualification,9.86
+28,43889,Aditi Gopichand Swami,26292,Antalya 2024,2024-06-18,2024,qualification,9.71
+29,39665,Parneet Kaur,26292,Antalya 2024,2024-06-18,2024,qualification,9.67
+30,8734,Deepika Kumari,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,qualification,9.21
+31,45025,Bhajan Kaur,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,qualification,9.19
+32,17262,Ankita Bhakat,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,qualification,9.07
+33,22125,Dhiraj Bommadevara,26291,Yecheon 2024,2024-05-21,2024,qualification,9.42
+34,45024,Mrinal Chauhan,26291,Yecheon 2024,2024-05-21,2024,qualification,9.35
+35,8734,Deepika Kumari,26291,Yecheon 2024,2024-05-21,2024,qualification,9.4
+36,45025,Bhajan Kaur,26291,Yecheon 2024,2024-05-21,2024,qualification,9.07
+37,17262,Ankita Bhakat,26291,Yecheon 2024,2024-05-21,2024,qualification,8.97
+38,27737,Komalika Bari,26291,Yecheon 2024,2024-05-21,2024,qualification,8.68
+39,42056,Priyansh ,26291,Yecheon 2024,2024-05-21,2024,qualification,9.85
+40,5354,Abhishek Verma,26291,Yecheon 2024,2024-05-21,2024,qualification,9.81
+41,39665,Parneet Kaur,26291,Yecheon 2024,2024-05-21,2024,qualification,9.78
+42,43889,Aditi Gopichand Swami,26291,Yecheon 2024,2024-05-21,2024,qualification,9.75
+43,22125,Dhiraj Bommadevara,26290,Shanghai 2024,2024-04-23,2024,qualification,9.62
+44,45024,Mrinal Chauhan,26290,Shanghai 2024,2024-04-23,2024,qualification,9.04
+45,17262,Ankita Bhakat,26290,Shanghai 2024,2024-04-23,2024,qualification,9.22
+46,45025,Bhajan Kaur,26290,Shanghai 2024,2024-04-23,2024,qualification,9.12
+47,8734,Deepika Kumari,26290,Shanghai 2024,2024-04-23,2024,qualification,9.11
+48,27737,Komalika Bari,26290,Shanghai 2024,2024-04-23,2024,qualification,8.83
+49,5354,Abhishek Verma,26290,Shanghai 2024,2024-04-23,2024,qualification,9.83
+50,42056,Priyansh ,26290,Shanghai 2024,2024-04-23,2024,qualification,9.82
+51,43889,Aditi Gopichand Swami,26290,Shanghai 2024,2024-04-23,2024,qualification,9.78
+52,39665,Parneet Kaur,26290,Shanghai 2024,2024-04-23,2024,qualification,9.76
+53,22125,Dhiraj Bommadevara,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.49
+54,31020,Parth Sushant Salunkhe,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.31
+55,17287,Simranjeet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.14
+56,8734,Deepika Kumari,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.12
+57,45025,Bhajan Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.1
+58,17262,Ankita Bhakat,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.03
+59,27738,Prathamesh Samadhan Jawkar,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.75
+60,42056,Priyansh ,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.71
+61,43889,Aditi Gopichand Swami,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.79
+62,39665,Parneet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,qualification,9.6
+63,22125,Dhiraj Bommadevara,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,qualification,9.4
+64,17262,Ankita Bhakat,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,qualification,8.97
+65,45025,Bhajan Kaur,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,qualification,8.86
+66,22125,Dhiraj Bommadevara,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.47
+67,17262,Ankita Bhakat,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.11
+68,45025,Bhajan Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.01
+69,17287,Simranjeet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,8.79
+70,42056,Priyansh ,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.86
+71,5354,Abhishek Verma,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.83
+72,39157,Ojas Pravin Deotale,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.83
+73,43889,Aditi Gopichand Swami,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.81
+74,39665,Parneet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,qualification,9.71
+75,22125,Dhiraj Bommadevara,20856,Hangzhou 2022,2023-10-02,2023,qualification,9.38
+76,17262,Ankita Bhakat,20856,Hangzhou 2022,2023-10-02,2023,qualification,9.01
+77,45025,Bhajan Kaur,20856,Hangzhou 2022,2023-10-02,2023,qualification,8.89
+78,39157,Ojas Pravin Deotale,20856,Hangzhou 2022,2023-10-02,2023,qualification,9.85
+79,5354,Abhishek Verma,20856,Hangzhou 2022,2023-10-02,2023,qualification,9.83
+80,43889,Aditi Gopichand Swami,20856,Hangzhou 2022,2023-10-02,2023,qualification,9.67
+81,22125,Dhiraj Bommadevara,25395,Paris 2023,2023-08-15,2023,qualification,9.53
+82,45024,Mrinal Chauhan,25395,Paris 2023,2023-08-15,2023,qualification,9.21
+83,45025,Bhajan Kaur,25395,Paris 2023,2023-08-15,2023,qualification,9.19
+84,17287,Simranjeet Kaur,25395,Paris 2023,2023-08-15,2023,qualification,9.15
+85,17262,Ankita Bhakat,25395,Paris 2023,2023-08-15,2023,qualification,9.14
+86,39157,Ojas Pravin Deotale,25395,Paris 2023,2023-08-15,2023,qualification,9.9
+87,27738,Prathamesh Samadhan Jawkar,25395,Paris 2023,2023-08-15,2023,qualification,9.83
+88,5354,Abhishek Verma,25395,Paris 2023,2023-08-15,2023,qualification,9.81
+89,43889,Aditi Gopichand Swami,25395,Paris 2023,2023-08-15,2023,qualification,9.83
+90,39665,Parneet Kaur,25395,Paris 2023,2023-08-15,2023,qualification,9.65
+91,22125,Dhiraj Bommadevara,25462,Berlin 2023,2023-07-31,2023,qualification,9.49
+92,45024,Mrinal Chauhan,25462,Berlin 2023,2023-07-31,2023,qualification,8.89
+93,17262,Ankita Bhakat,25462,Berlin 2023,2023-07-31,2023,qualification,8.88
+94,45025,Bhajan Kaur,25462,Berlin 2023,2023-07-31,2023,qualification,8.71
+95,17287,Simranjeet Kaur,25462,Berlin 2023,2023-07-31,2023,qualification,8.68
+96,39157,Ojas Pravin Deotale,25462,Berlin 2023,2023-07-31,2023,qualification,9.75
+97,27738,Prathamesh Samadhan Jawkar,25462,Berlin 2023,2023-07-31,2023,qualification,9.71
+98,5354,Abhishek Verma,25462,Berlin 2023,2023-07-31,2023,qualification,9.62
+99,43889,Aditi Gopichand Swami,25462,Berlin 2023,2023-07-31,2023,qualification,9.62
+100,39665,Parneet Kaur,25462,Berlin 2023,2023-07-31,2023,qualification,9.46
+101,31020,Parth Sushant Salunkhe,24223,Limerick 2023,2023-07-03,2023,qualification,9.33
+102,45025,Bhajan Kaur,24223,Limerick 2023,2023-07-03,2023,qualification,8.58
+103,42056,Priyansh ,24223,Limerick 2023,2023-07-03,2023,qualification,9.74
+104,27738,Prathamesh Samadhan Jawkar,24223,Limerick 2023,2023-07-03,2023,qualification,9.68
+105,39665,Parneet Kaur,24223,Limerick 2023,2023-07-03,2023,qualification,9.53
+106,43889,Aditi Gopichand Swami,24223,Limerick 2023,2023-07-03,2023,qualification,9.38
+107,45024,Mrinal Chauhan,25735,Medellin 2023,2023-06-13,2023,qualification,9.31
+108,22125,Dhiraj Bommadevara,25735,Medellin 2023,2023-06-13,2023,qualification,9.29
+109,45025,Bhajan Kaur,25735,Medellin 2023,2023-06-13,2023,qualification,9.28
+110,17262,Ankita Bhakat,25735,Medellin 2023,2023-06-13,2023,qualification,8.83
+111,5354,Abhishek Verma,25735,Medellin 2023,2023-06-13,2023,qualification,9.82
+112,39157,Ojas Pravin Deotale,25735,Medellin 2023,2023-06-13,2023,qualification,9.76
+113,27738,Prathamesh Samadhan Jawkar,25735,Medellin 2023,2023-06-13,2023,qualification,9.75
+114,43889,Aditi Gopichand Swami,25735,Medellin 2023,2023-06-13,2023,qualification,9.88
+115,39665,Parneet Kaur,25735,Medellin 2023,2023-06-13,2023,qualification,9.72
+116,31020,Parth Sushant Salunkhe,25418,Singapore 2023 Asia Cup,2023-06-05,2023,qualification,9.33
+117,42056,Priyansh ,25418,Singapore 2023 Asia Cup,2023-06-05,2023,qualification,9.86
+118,22125,Dhiraj Bommadevara,26055,Shanghai 2023,2023-05-16,2023,qualification,9.11
+119,17287,Simranjeet Kaur,26055,Shanghai 2023,2023-05-16,2023,qualification,9.0
+120,45025,Bhajan Kaur,26055,Shanghai 2023,2023-05-16,2023,qualification,8.86
+121,17262,Ankita Bhakat,26055,Shanghai 2023,2023-05-16,2023,qualification,8.75
+122,39157,Ojas Pravin Deotale,26055,Shanghai 2023,2023-05-16,2023,qualification,9.67
+123,27738,Prathamesh Samadhan Jawkar,26055,Shanghai 2023,2023-05-16,2023,qualification,9.58
+124,43889,Aditi Gopichand Swami,26055,Shanghai 2023,2023-05-16,2023,qualification,9.57
+125,45024,Mrinal Chauhan,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,qualification,9.35
+126,5354,Abhishek Verma,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,qualification,9.88
+127,39665,Parneet Kaur,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,qualification,9.68
+128,22125,Dhiraj Bommadevara,25394,Antalya 2023,2023-04-18,2023,qualification,9.24
+129,45025,Bhajan Kaur,25394,Antalya 2023,2023-04-18,2023,qualification,9.0
+130,17287,Simranjeet Kaur,25394,Antalya 2023,2023-04-18,2023,qualification,8.94
+131,17262,Ankita Bhakat,25394,Antalya 2023,2023-04-18,2023,qualification,8.92
+132,39157,Ojas Pravin Deotale,25394,Antalya 2023,2023-04-18,2023,qualification,9.85
+133,27738,Prathamesh Samadhan Jawkar,25394,Antalya 2023,2023-04-18,2023,qualification,9.81
+134,43889,Aditi Gopichand Swami,25394,Antalya 2023,2023-04-18,2023,qualification,9.72
+135,31020,Parth Sushant Salunkhe,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,qualification,9.19
+136,42056,Priyansh ,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,qualification,9.67
+137,39665,Parneet Kaur,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,qualification,9.56
+138,31020,Parth Sushant Salunkhe,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.4
+139,45024,Mrinal Chauhan,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.12
+140,39157,Ojas Pravin Deotale,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.62
+141,42056,Priyansh ,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.54
+142,43889,Aditi Gopichand Swami,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.58
+143,39665,Parneet Kaur,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,qualification,9.44
+144,27737,Komalika Bari,24210,Medellin 2022,2022-07-18,2022,qualification,8.92
+145,42056,Priyansh ,24210,Medellin 2022,2022-07-18,2022,qualification,9.78
+146,5354,Abhishek Verma,20555,Birmingham 2022 World Games,2022-07-07,2022,qualification,9.82
+147,17262,Ankita Bhakat,24209,Paris 2022,2022-06-21,2022,qualification,8.94
+148,8734,Deepika Kumari,24209,Paris 2022,2022-06-21,2022,qualification,8.86
+149,17287,Simranjeet Kaur,24209,Paris 2022,2022-06-21,2022,qualification,8.86
+150,5354,Abhishek Verma,24209,Paris 2022,2022-06-21,2022,qualification,9.88
+151,27737,Komalika Bari,24208,Gwangju 2022,2022-05-16,2022,qualification,8.62
+152,17262,Ankita Bhakat,24208,Gwangju 2022,2022-05-16,2022,qualification,8.42
+153,17287,Simranjeet Kaur,24208,Gwangju 2022,2022-05-16,2022,qualification,8.17
+154,5354,Abhishek Verma,24208,Gwangju 2022,2022-05-16,2022,qualification,9.85
+155,31020,Parth Sushant Salunkhe,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,9.19
+156,45024,Mrinal Chauhan,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,9.01
+157,45025,Bhajan Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,8.67
+158,27738,Prathamesh Samadhan Jawkar,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,9.62
+159,39665,Parneet Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,9.58
+160,43889,Aditi Gopichand Swami,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,qualification,9.47
+161,17262,Ankita Bhakat,24207,Antalya 2022,2022-04-18,2022,qualification,8.92
+162,17287,Simranjeet Kaur,24207,Antalya 2022,2022-04-18,2022,qualification,8.76
+163,27737,Komalika Bari,24207,Antalya 2022,2022-04-18,2022,qualification,8.71
+164,5354,Abhishek Verma,24207,Antalya 2022,2022-04-18,2022,qualification,9.64
+165,31020,Parth Sushant Salunkhe,24684,Phuket 2022,2022-03-14,2022,qualification,9.19
+166,22125,Dhiraj Bommadevara,24684,Phuket 2022,2022-03-14,2022,qualification,9.11
+167,42056,Priyansh ,24684,Phuket 2022,2022-03-14,2022,qualification,9.64
+168,27738,Prathamesh Samadhan Jawkar,24684,Phuket 2022,2022-03-14,2022,qualification,9.61
+169,43889,Aditi Gopichand Swami,24684,Phuket 2022,2022-03-14,2022,qualification,9.47
+170,39665,Parneet Kaur,24684,Phuket 2022,2022-03-14,2022,qualification,9.35
+171,31020,Parth Sushant Salunkhe,23746,2021 Asian Championships,2021-11-13,2021,qualification,9.31
+172,17262,Ankita Bhakat,23746,2021 Asian Championships,2021-11-13,2021,qualification,9.12
+173,27737,Komalika Bari,23746,2021 Asian Championships,2021-11-13,2021,qualification,8.94
+174,5354,Abhishek Verma,23746,2021 Asian Championships,2021-11-13,2021,qualification,9.82
+175,39665,Parneet Kaur,23746,2021 Asian Championships,2021-11-13,2021,qualification,9.72
+176,31020,Parth Sushant Salunkhe,22722,Yankton 2021,2021-09-19,2021,qualification,8.83
+177,17262,Ankita Bhakat,22722,Yankton 2021,2021-09-19,2021,qualification,8.65
+178,27737,Komalika Bari,22722,Yankton 2021,2021-09-19,2021,qualification,8.53
+179,5354,Abhishek Verma,22722,Yankton 2021,2021-09-19,2021,qualification,9.65
+180,31020,Parth Sushant Salunkhe,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.21
+181,22125,Dhiraj Bommadevara,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.08
+182,27737,Komalika Bari,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.11
+183,27738,Prathamesh Samadhan Jawkar,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.58
+184,42056,Priyansh ,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.49
+185,39665,Parneet Kaur,22723,Wroclaw 2021,2021-08-09,2021,qualification,9.57
+186,8734,Deepika Kumari,14904,Tokyo 2020 Olympics,2021-07-23,2021,qualification,9.21
+187,22125,Dhiraj Bommadevara,22720,Paris 2021,2021-06-21,2021,qualification,9.1
+188,8734,Deepika Kumari,22720,Paris 2021,2021-06-21,2021,qualification,9.36
+189,17262,Ankita Bhakat,22720,Paris 2021,2021-06-21,2021,qualification,9.22
+190,27737,Komalika Bari,22720,Paris 2021,2021-06-21,2021,qualification,9.0
+191,5354,Abhishek Verma,22720,Paris 2021,2021-06-21,2021,qualification,9.81
+192,22125,Dhiraj Bommadevara,22718,Guatemala City 2021,2021-04-19,2021,qualification,9.22
+193,17262,Ankita Bhakat,22718,Guatemala City 2021,2021-04-19,2021,qualification,9.35
+194,8734,Deepika Kumari,22718,Guatemala City 2021,2021-04-19,2021,qualification,9.32
+195,27737,Komalika Bari,22718,Guatemala City 2021,2021-04-19,2021,qualification,9.15
+196,8734,Deepika Kumari,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,qualification,9.1
+197,17262,Ankita Bhakat,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,qualification,8.79
+198,8734,Deepika Kumari,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,qualification,9.1
+199,17262,Ankita Bhakat,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,qualification,8.79
+200,5354,Abhishek Verma,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,qualification,9.79
+201,31020,Parth Sushant Salunkhe,19874,Madrid 2019,2019-08-19,2019,qualification,9.17
+202,27737,Komalika Bari,19874,Madrid 2019,2019-08-19,2019,qualification,9.03
+203,27738,Prathamesh Samadhan Jawkar,19874,Madrid 2019,2019-08-19,2019,qualification,9.22
+204,5354,Abhishek Verma,26147,Hermosillo 2023,,,qualification,
+205,8734,Deepika Kumari,27828,Tlaxcala 2024,,,qualification,
+206,22125,Dhiraj Bommadevara,26147,Hermosillo 2023,,,qualification,
+207,22125,Dhiraj Bommadevara,27828,Tlaxcala 2024,,,qualification,
+208,27738,Prathamesh Samadhan Jawkar,26147,Hermosillo 2023,,,qualification,
+209,42056,Priyansh ,27828,Tlaxcala 2024,,,qualification,
+210,43889,Aditi Gopichand Swami,26147,Hermosillo 2023,,,qualification,
+211,27738,Prathamesh Samadhan Jawkar,28887,Kamnik 2025 Veronica’s Cup,2025-05-22,2025,elimination,9.814
+212,22125,Dhiraj Bommadevara,26294,Shanghai 2025,2025-05-06,2025,elimination,9.47
+213,31020,Parth Sushant Salunkhe,26294,Shanghai 2025,2025-05-06,2025,elimination,9.285
+214,8734,Deepika Kumari,26294,Shanghai 2025,2025-05-06,2025,elimination,9.318333333333333
+215,17262,Ankita Bhakat,26294,Shanghai 2025,2025-05-06,2025,elimination,9.06
+216,17287,Simranjeet Kaur,26294,Shanghai 2025,2025-05-06,2025,elimination,8.67
+217,5354,Abhishek Verma,26294,Shanghai 2025,2025-05-06,2025,elimination,9.53
+218,39157,Ojas Pravin Deotale,26294,Shanghai 2025,2025-05-06,2025,elimination,9.53
+219,43889,Aditi Gopichand Swami,26294,Shanghai 2025,2025-05-06,2025,elimination,8.6
+220,22125,Dhiraj Bommadevara,26293,Central Florida 2025,2025-04-08,2025,elimination,9.443333333333333
+221,31020,Parth Sushant Salunkhe,26293,Central Florida 2025,2025-04-08,2025,elimination,8.67
+222,17262,Ankita Bhakat,26293,Central Florida 2025,2025-04-08,2025,elimination,9.0
+223,8734,Deepika Kumari,26293,Central Florida 2025,2025-04-08,2025,elimination,8.7425
+224,17287,Simranjeet Kaur,26293,Central Florida 2025,2025-04-08,2025,elimination,8.67
+225,5354,Abhishek Verma,26293,Central Florida 2025,2025-04-08,2025,elimination,9.72
+226,39157,Ojas Pravin Deotale,26293,Central Florida 2025,2025-04-08,2025,elimination,9.765
+227,43889,Aditi Gopichand Swami,28444,2024 Asian Youth - Taipei 2024,2024-09-27,2024,elimination,9.6
+228,5354,Abhishek Verma,26030,Lac La Biche 2024,2024-09-16,2024,elimination,5.75
+229,22125,Dhiraj Bommadevara,23176,Paris 2024 Olympics,2024-07-25,2024,elimination,9.59
+230,17262,Ankita Bhakat,23176,Paris 2024 Olympics,2024-07-25,2024,elimination,9.13
+231,45025,Bhajan Kaur,23176,Paris 2024 Olympics,2024-07-25,2024,elimination,9.236666666666666
+232,8734,Deepika Kumari,23176,Paris 2024 Olympics,2024-07-25,2024,elimination,9.0375
+233,22125,Dhiraj Bommadevara,26292,Antalya 2024,2024-06-18,2024,elimination,9.62
+234,45025,Bhajan Kaur,26292,Antalya 2024,2024-06-18,2024,elimination,8.885
+235,8734,Deepika Kumari,26292,Antalya 2024,2024-06-18,2024,elimination,9.366666666666667
+236,17262,Ankita Bhakat,26292,Antalya 2024,2024-06-18,2024,elimination,9.108333333333333
+237,42056,Priyansh ,26292,Antalya 2024,2024-06-18,2024,elimination,9.931666666666667
+238,5354,Abhishek Verma,26292,Antalya 2024,2024-06-18,2024,elimination,9.753333333333334
+239,43889,Aditi Gopichand Swami,26292,Antalya 2024,2024-06-18,2024,elimination,9.33
+240,39665,Parneet Kaur,26292,Antalya 2024,2024-06-18,2024,elimination,9.6
+241,8734,Deepika Kumari,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,elimination,8.6
+242,45025,Bhajan Kaur,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,elimination,9.318000000000001
+243,17262,Ankita Bhakat,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,elimination,8.959999999999999
+244,22125,Dhiraj Bommadevara,26291,Yecheon 2024,2024-05-21,2024,elimination,9.5
+245,45024,Mrinal Chauhan,26291,Yecheon 2024,2024-05-21,2024,elimination,9.47
+246,8734,Deepika Kumari,26291,Yecheon 2024,2024-05-21,2024,elimination,9.173333333333334
+247,45025,Bhajan Kaur,26291,Yecheon 2024,2024-05-21,2024,elimination,9.2
+248,17262,Ankita Bhakat,26291,Yecheon 2024,2024-05-21,2024,elimination,9.190000000000001
+249,27737,Komalika Bari,26291,Yecheon 2024,2024-05-21,2024,elimination,
+250,42056,Priyansh ,26291,Yecheon 2024,2024-05-21,2024,elimination,9.89
+251,5354,Abhishek Verma,26291,Yecheon 2024,2024-05-21,2024,elimination,9.57
+252,39665,Parneet Kaur,26291,Yecheon 2024,2024-05-21,2024,elimination,9.623333333333333
+253,43889,Aditi Gopichand Swami,26291,Yecheon 2024,2024-05-21,2024,elimination,9.47
+254,22125,Dhiraj Bommadevara,26290,Shanghai 2024,2024-04-23,2024,elimination,9.466666666666667
+255,45024,Mrinal Chauhan,26290,Shanghai 2024,2024-04-23,2024,elimination,
+256,17262,Ankita Bhakat,26290,Shanghai 2024,2024-04-23,2024,elimination,8.47
+257,45025,Bhajan Kaur,26290,Shanghai 2024,2024-04-23,2024,elimination,8.22
+258,8734,Deepika Kumari,26290,Shanghai 2024,2024-04-23,2024,elimination,9.385
+259,27737,Komalika Bari,26290,Shanghai 2024,2024-04-23,2024,elimination,8.67
+260,5354,Abhishek Verma,26290,Shanghai 2024,2024-04-23,2024,elimination,9.8
+261,42056,Priyansh ,26290,Shanghai 2024,2024-04-23,2024,elimination,9.8
+262,43889,Aditi Gopichand Swami,26290,Shanghai 2024,2024-04-23,2024,elimination,9.643333333333333
+263,39665,Parneet Kaur,26290,Shanghai 2024,2024-04-23,2024,elimination,9.77
+264,22125,Dhiraj Bommadevara,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.478
+265,31020,Parth Sushant Salunkhe,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.293333333333335
+266,17287,Simranjeet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,8.955
+267,8734,Deepika Kumari,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.25
+268,45025,Bhajan Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,8.58
+269,17262,Ankita Bhakat,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.23
+270,27738,Prathamesh Samadhan Jawkar,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.865
+271,42056,Priyansh ,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.83
+272,43889,Aditi Gopichand Swami,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.817499999999999
+273,39665,Parneet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,elimination,9.6
+274,22125,Dhiraj Bommadevara,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,elimination,9.053999999999998
+275,17262,Ankita Bhakat,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,elimination,7.896666666666666
+276,45025,Bhajan Kaur,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,elimination,5.75
+277,22125,Dhiraj Bommadevara,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.313333333333333
+278,17262,Ankita Bhakat,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,8.725
+279,45025,Bhajan Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,8.91
+280,17287,Simranjeet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,8.6
+281,42056,Priyansh ,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.823333333333332
+282,5354,Abhishek Verma,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.76
+283,39157,Ojas Pravin Deotale,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.8
+284,43889,Aditi Gopichand Swami,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.6
+285,39665,Parneet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,elimination,9.666
+286,22125,Dhiraj Bommadevara,20856,Hangzhou 2022,2023-10-02,2023,elimination,8.906666666666666
+287,17262,Ankita Bhakat,20856,Hangzhou 2022,2023-10-02,2023,elimination,8.8
+288,45025,Bhajan Kaur,20856,Hangzhou 2022,2023-10-02,2023,elimination,9.256666666666666
+289,39157,Ojas Pravin Deotale,20856,Hangzhou 2022,2023-10-02,2023,elimination,9.906
+290,5354,Abhishek Verma,20856,Hangzhou 2022,2023-10-02,2023,elimination,9.786000000000001
+291,43889,Aditi Gopichand Swami,20856,Hangzhou 2022,2023-10-02,2023,elimination,9.838
+292,22125,Dhiraj Bommadevara,25395,Paris 2023,2023-08-15,2023,elimination,9.373333333333333
+293,45024,Mrinal Chauhan,25395,Paris 2023,2023-08-15,2023,elimination,
+294,45025,Bhajan Kaur,25395,Paris 2023,2023-08-15,2023,elimination,9.125
+295,17287,Simranjeet Kaur,25395,Paris 2023,2023-08-15,2023,elimination,8.33
+296,17262,Ankita Bhakat,25395,Paris 2023,2023-08-15,2023,elimination,9.165
+297,39157,Ojas Pravin Deotale,25395,Paris 2023,2023-08-15,2023,elimination,9.47
+298,27738,Prathamesh Samadhan Jawkar,25395,Paris 2023,2023-08-15,2023,elimination,9.65
+299,5354,Abhishek Verma,25395,Paris 2023,2023-08-15,2023,elimination,9.73
+300,43889,Aditi Gopichand Swami,25395,Paris 2023,2023-08-15,2023,elimination,9.5
+301,39665,Parneet Kaur,25395,Paris 2023,2023-08-15,2023,elimination,9.5
+302,22125,Dhiraj Bommadevara,25462,Berlin 2023,2023-07-31,2023,elimination,8.235
+303,45024,Mrinal Chauhan,25462,Berlin 2023,2023-07-31,2023,elimination,
+304,17262,Ankita Bhakat,25462,Berlin 2023,2023-07-31,2023,elimination,
+305,45025,Bhajan Kaur,25462,Berlin 2023,2023-07-31,2023,elimination,7.0
+306,17287,Simranjeet Kaur,25462,Berlin 2023,2023-07-31,2023,elimination,7.896666666666667
+307,39157,Ojas Pravin Deotale,25462,Berlin 2023,2023-07-31,2023,elimination,9.693999999999999
+308,27738,Prathamesh Samadhan Jawkar,25462,Berlin 2023,2023-07-31,2023,elimination,9.43
+309,5354,Abhishek Verma,25462,Berlin 2023,2023-07-31,2023,elimination,
+310,43889,Aditi Gopichand Swami,25462,Berlin 2023,2023-07-31,2023,elimination,9.745999999999999
+311,39665,Parneet Kaur,25462,Berlin 2023,2023-07-31,2023,elimination,9.6
+312,31020,Parth Sushant Salunkhe,24223,Limerick 2023,2023-07-03,2023,elimination,9.306000000000001
+313,45025,Bhajan Kaur,24223,Limerick 2023,2023-07-03,2023,elimination,8.943333333333333
+314,42056,Priyansh ,24223,Limerick 2023,2023-07-03,2023,elimination,9.680000000000001
+315,27738,Prathamesh Samadhan Jawkar,24223,Limerick 2023,2023-07-03,2023,elimination,9.53
+316,39665,Parneet Kaur,24223,Limerick 2023,2023-07-03,2023,elimination,9.135
+317,43889,Aditi Gopichand Swami,24223,Limerick 2023,2023-07-03,2023,elimination,9.373999999999999
+318,45024,Mrinal Chauhan,25735,Medellin 2023,2023-06-13,2023,elimination,9.135
+319,22125,Dhiraj Bommadevara,25735,Medellin 2023,2023-06-13,2023,elimination,9.33
+320,45025,Bhajan Kaur,25735,Medellin 2023,2023-06-13,2023,elimination,9.2375
+321,17262,Ankita Bhakat,25735,Medellin 2023,2023-06-13,2023,elimination,9.0
+322,5354,Abhishek Verma,25735,Medellin 2023,2023-06-13,2023,elimination,9.834999999999999
+323,39157,Ojas Pravin Deotale,25735,Medellin 2023,2023-06-13,2023,elimination,9.765
+324,27738,Prathamesh Samadhan Jawkar,25735,Medellin 2023,2023-06-13,2023,elimination,9.865
+325,43889,Aditi Gopichand Swami,25735,Medellin 2023,2023-06-13,2023,elimination,9.6
+326,39665,Parneet Kaur,25735,Medellin 2023,2023-06-13,2023,elimination,9.686666666666667
+327,31020,Parth Sushant Salunkhe,25418,Singapore 2023 Asia Cup,2023-06-05,2023,elimination,9.186
+328,42056,Priyansh ,25418,Singapore 2023 Asia Cup,2023-06-05,2023,elimination,9.772
+329,22125,Dhiraj Bommadevara,26055,Shanghai 2023,2023-05-16,2023,elimination,9.575
+330,17287,Simranjeet Kaur,26055,Shanghai 2023,2023-05-16,2023,elimination,8.8
+331,45025,Bhajan Kaur,26055,Shanghai 2023,2023-05-16,2023,elimination,9.1
+332,17262,Ankita Bhakat,26055,Shanghai 2023,2023-05-16,2023,elimination,9.0
+333,39157,Ojas Pravin Deotale,26055,Shanghai 2023,2023-05-16,2023,elimination,9.8
+334,27738,Prathamesh Samadhan Jawkar,26055,Shanghai 2023,2023-05-16,2023,elimination,9.875
+335,43889,Aditi Gopichand Swami,26055,Shanghai 2023,2023-05-16,2023,elimination,9.446666666666667
+336,45024,Mrinal Chauhan,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,elimination,9.190000000000001
+337,5354,Abhishek Verma,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,elimination,9.75
+338,39665,Parneet Kaur,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,elimination,9.666666666666666
+339,22125,Dhiraj Bommadevara,25394,Antalya 2023,2023-04-18,2023,elimination,9.343333333333334
+340,45025,Bhajan Kaur,25394,Antalya 2023,2023-04-18,2023,elimination,8.799999999999999
+341,17287,Simranjeet Kaur,25394,Antalya 2023,2023-04-18,2023,elimination,
+342,17262,Ankita Bhakat,25394,Antalya 2023,2023-04-18,2023,elimination,8.9
+343,39157,Ojas Pravin Deotale,25394,Antalya 2023,2023-04-18,2023,elimination,9.735
+344,27738,Prathamesh Samadhan Jawkar,25394,Antalya 2023,2023-04-18,2023,elimination,9.7825
+345,43889,Aditi Gopichand Swami,25394,Antalya 2023,2023-04-18,2023,elimination,9.73
+346,31020,Parth Sushant Salunkhe,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,elimination,9.13
+347,42056,Priyansh ,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,elimination,9.828
+348,39665,Parneet Kaur,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,elimination,9.6675
+349,31020,Parth Sushant Salunkhe,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,8.559999999999999
+350,45024,Mrinal Chauhan,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,8.2025
+351,39157,Ojas Pravin Deotale,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,8.020000000000001
+352,42056,Priyansh ,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,9.828
+353,43889,Aditi Gopichand Swami,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,9.574000000000002
+354,39665,Parneet Kaur,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,elimination,9.6
+355,27737,Komalika Bari,24210,Medellin 2022,2022-07-18,2022,elimination,
+356,42056,Priyansh ,24210,Medellin 2022,2022-07-18,2022,elimination,
+357,5354,Abhishek Verma,20555,Birmingham 2022 World Games,2022-07-07,2022,elimination,
+358,17262,Ankita Bhakat,24209,Paris 2022,2022-06-21,2022,elimination,
+359,8734,Deepika Kumari,24209,Paris 2022,2022-06-21,2022,elimination,
+360,17287,Simranjeet Kaur,24209,Paris 2022,2022-06-21,2022,elimination,
+361,5354,Abhishek Verma,24209,Paris 2022,2022-06-21,2022,elimination,
+362,27737,Komalika Bari,24208,Gwangju 2022,2022-05-16,2022,elimination,
+363,17262,Ankita Bhakat,24208,Gwangju 2022,2022-05-16,2022,elimination,
+364,17287,Simranjeet Kaur,24208,Gwangju 2022,2022-05-16,2022,elimination,
+365,5354,Abhishek Verma,24208,Gwangju 2022,2022-05-16,2022,elimination,
+366,31020,Parth Sushant Salunkhe,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+367,45024,Mrinal Chauhan,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+368,45025,Bhajan Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+369,27738,Prathamesh Samadhan Jawkar,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+370,39665,Parneet Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+371,43889,Aditi Gopichand Swami,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,elimination,
+372,17262,Ankita Bhakat,24207,Antalya 2022,2022-04-18,2022,elimination,
+373,17287,Simranjeet Kaur,24207,Antalya 2022,2022-04-18,2022,elimination,
+374,27737,Komalika Bari,24207,Antalya 2022,2022-04-18,2022,elimination,
+375,5354,Abhishek Verma,24207,Antalya 2022,2022-04-18,2022,elimination,
+376,31020,Parth Sushant Salunkhe,24684,Phuket 2022,2022-03-14,2022,elimination,
+377,22125,Dhiraj Bommadevara,24684,Phuket 2022,2022-03-14,2022,elimination,
+378,42056,Priyansh ,24684,Phuket 2022,2022-03-14,2022,elimination,
+379,27738,Prathamesh Samadhan Jawkar,24684,Phuket 2022,2022-03-14,2022,elimination,
+380,43889,Aditi Gopichand Swami,24684,Phuket 2022,2022-03-14,2022,elimination,
+381,39665,Parneet Kaur,24684,Phuket 2022,2022-03-14,2022,elimination,
+382,31020,Parth Sushant Salunkhe,23746,2021 Asian Championships,2021-11-13,2021,elimination,
+383,17262,Ankita Bhakat,23746,2021 Asian Championships,2021-11-13,2021,elimination,
+384,27737,Komalika Bari,23746,2021 Asian Championships,2021-11-13,2021,elimination,
+385,5354,Abhishek Verma,23746,2021 Asian Championships,2021-11-13,2021,elimination,
+386,39665,Parneet Kaur,23746,2021 Asian Championships,2021-11-13,2021,elimination,
+387,31020,Parth Sushant Salunkhe,22722,Yankton 2021,2021-09-19,2021,elimination,
+388,17262,Ankita Bhakat,22722,Yankton 2021,2021-09-19,2021,elimination,
+389,27737,Komalika Bari,22722,Yankton 2021,2021-09-19,2021,elimination,
+390,5354,Abhishek Verma,22722,Yankton 2021,2021-09-19,2021,elimination,
+391,31020,Parth Sushant Salunkhe,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+392,22125,Dhiraj Bommadevara,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+393,27737,Komalika Bari,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+394,27738,Prathamesh Samadhan Jawkar,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+395,42056,Priyansh ,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+396,39665,Parneet Kaur,22723,Wroclaw 2021,2021-08-09,2021,elimination,
+397,8734,Deepika Kumari,14904,Tokyo 2020 Olympics,2021-07-23,2021,elimination,
+398,22125,Dhiraj Bommadevara,22720,Paris 2021,2021-06-21,2021,elimination,
+399,8734,Deepika Kumari,22720,Paris 2021,2021-06-21,2021,elimination,
+400,17262,Ankita Bhakat,22720,Paris 2021,2021-06-21,2021,elimination,
+401,27737,Komalika Bari,22720,Paris 2021,2021-06-21,2021,elimination,
+402,5354,Abhishek Verma,22720,Paris 2021,2021-06-21,2021,elimination,
+403,22125,Dhiraj Bommadevara,22718,Guatemala City 2021,2021-04-19,2021,elimination,
+404,17262,Ankita Bhakat,22718,Guatemala City 2021,2021-04-19,2021,elimination,
+405,8734,Deepika Kumari,22718,Guatemala City 2021,2021-04-19,2021,elimination,
+406,27737,Komalika Bari,22718,Guatemala City 2021,2021-04-19,2021,elimination,
+407,8734,Deepika Kumari,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,elimination,
+408,17262,Ankita Bhakat,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,elimination,
+409,8734,Deepika Kumari,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,elimination,
+410,17262,Ankita Bhakat,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,elimination,
+411,5354,Abhishek Verma,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,elimination,
+412,31020,Parth Sushant Salunkhe,19874,Madrid 2019,2019-08-19,2019,elimination,
+413,27737,Komalika Bari,19874,Madrid 2019,2019-08-19,2019,elimination,
+414,27738,Prathamesh Samadhan Jawkar,19874,Madrid 2019,2019-08-19,2019,elimination,
+415,5354,Abhishek Verma,26147,Hermosillo 2023,,,elimination,9.82
+416,8734,Deepika Kumari,27828,Tlaxcala 2024,,,elimination,9.116666666666667
+417,22125,Dhiraj Bommadevara,26147,Hermosillo 2023,,,elimination,9.423333333333334
+418,22125,Dhiraj Bommadevara,27828,Tlaxcala 2024,,,elimination,9.27
+419,27738,Prathamesh Samadhan Jawkar,26147,Hermosillo 2023,,,elimination,9.933333333333332
+420,42056,Priyansh ,27828,Tlaxcala 2024,,,elimination,9.73
+421,43889,Aditi Gopichand Swami,26147,Hermosillo 2023,,,elimination,9.67
+422,27738,Prathamesh Samadhan Jawkar,28887,Kamnik 2025 Veronica’s Cup,2025-05-22,2025,competition,9.837
+423,22125,Dhiraj Bommadevara,26294,Shanghai 2025,2025-05-06,2025,competition,9.435
+424,31020,Parth Sushant Salunkhe,26294,Shanghai 2025,2025-05-06,2025,competition,9.1625
+425,8734,Deepika Kumari,26294,Shanghai 2025,2025-05-06,2025,competition,9.209166666666667
+426,17262,Ankita Bhakat,26294,Shanghai 2025,2025-05-06,2025,competition,9.06
+427,17287,Simranjeet Kaur,26294,Shanghai 2025,2025-05-06,2025,competition,8.76
+428,5354,Abhishek Verma,26294,Shanghai 2025,2025-05-06,2025,competition,9.725
+429,39157,Ojas Pravin Deotale,26294,Shanghai 2025,2025-05-06,2025,competition,9.675
+430,43889,Aditi Gopichand Swami,26294,Shanghai 2025,2025-05-06,2025,competition,9.155000000000001
+431,22125,Dhiraj Bommadevara,26293,Central Florida 2025,2025-04-08,2025,competition,9.346666666666668
+432,31020,Parth Sushant Salunkhe,26293,Central Florida 2025,2025-04-08,2025,competition,8.780000000000001
+433,17262,Ankita Bhakat,26293,Central Florida 2025,2025-04-08,2025,competition,8.940000000000001
+434,8734,Deepika Kumari,26293,Central Florida 2025,2025-04-08,2025,competition,8.80125
+435,17287,Simranjeet Kaur,26293,Central Florida 2025,2025-04-08,2025,competition,8.57
+436,5354,Abhishek Verma,26293,Central Florida 2025,2025-04-08,2025,competition,9.7
+437,39157,Ojas Pravin Deotale,26293,Central Florida 2025,2025-04-08,2025,competition,9.7075
+438,43889,Aditi Gopichand Swami,28444,2024 Asian Youth - Taipei 2024,2024-09-27,2024,competition,9.545
+439,5354,Abhishek Verma,26030,Lac La Biche 2024,2024-09-16,2024,competition,8.57
+440,22125,Dhiraj Bommadevara,23176,Paris 2024 Olympics,2024-07-25,2024,competition,9.525
+441,17262,Ankita Bhakat,23176,Paris 2024 Olympics,2024-07-25,2024,competition,9.190000000000001
+442,45025,Bhajan Kaur,23176,Paris 2024 Olympics,2024-07-25,2024,competition,9.193333333333333
+443,8734,Deepika Kumari,23176,Paris 2024 Olympics,2024-07-25,2024,competition,9.088750000000001
+444,22125,Dhiraj Bommadevara,26292,Antalya 2024,2024-06-18,2024,competition,9.594999999999999
+445,45025,Bhajan Kaur,26292,Antalya 2024,2024-06-18,2024,competition,9.0175
+446,8734,Deepika Kumari,26292,Antalya 2024,2024-06-18,2024,competition,9.233333333333334
+447,17262,Ankita Bhakat,26292,Antalya 2024,2024-06-18,2024,competition,9.004166666666666
+448,42056,Priyansh ,26292,Antalya 2024,2024-06-18,2024,competition,9.895833333333332
+449,5354,Abhishek Verma,26292,Antalya 2024,2024-06-18,2024,competition,9.806666666666667
+450,43889,Aditi Gopichand Swami,26292,Antalya 2024,2024-06-18,2024,competition,9.52
+451,39665,Parneet Kaur,26292,Antalya 2024,2024-06-18,2024,competition,9.635
+452,8734,Deepika Kumari,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,competition,8.905000000000001
+453,45025,Bhajan Kaur,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,competition,9.254000000000001
+454,17262,Ankita Bhakat,27538,Final qualifier | #ArcheryinParis,2024-06-14,2024,competition,9.015
+455,22125,Dhiraj Bommadevara,26291,Yecheon 2024,2024-05-21,2024,competition,9.46
+456,45024,Mrinal Chauhan,26291,Yecheon 2024,2024-05-21,2024,competition,9.41
+457,8734,Deepika Kumari,26291,Yecheon 2024,2024-05-21,2024,competition,9.286666666666667
+458,45025,Bhajan Kaur,26291,Yecheon 2024,2024-05-21,2024,competition,9.135
+459,17262,Ankita Bhakat,26291,Yecheon 2024,2024-05-21,2024,competition,9.080000000000002
+460,27737,Komalika Bari,26291,Yecheon 2024,2024-05-21,2024,competition,8.68
+461,42056,Priyansh ,26291,Yecheon 2024,2024-05-21,2024,competition,9.870000000000001
+462,5354,Abhishek Verma,26291,Yecheon 2024,2024-05-21,2024,competition,9.690000000000001
+463,39665,Parneet Kaur,26291,Yecheon 2024,2024-05-21,2024,competition,9.701666666666666
+464,43889,Aditi Gopichand Swami,26291,Yecheon 2024,2024-05-21,2024,competition,9.61
+465,22125,Dhiraj Bommadevara,26290,Shanghai 2024,2024-04-23,2024,competition,9.543333333333333
+466,45024,Mrinal Chauhan,26290,Shanghai 2024,2024-04-23,2024,competition,9.04
+467,17262,Ankita Bhakat,26290,Shanghai 2024,2024-04-23,2024,competition,8.845
+468,45025,Bhajan Kaur,26290,Shanghai 2024,2024-04-23,2024,competition,8.67
+469,8734,Deepika Kumari,26290,Shanghai 2024,2024-04-23,2024,competition,9.247499999999999
+470,27737,Komalika Bari,26290,Shanghai 2024,2024-04-23,2024,competition,8.75
+471,5354,Abhishek Verma,26290,Shanghai 2024,2024-04-23,2024,competition,9.815000000000001
+472,42056,Priyansh ,26290,Shanghai 2024,2024-04-23,2024,competition,9.81
+473,43889,Aditi Gopichand Swami,26290,Shanghai 2024,2024-04-23,2024,competition,9.711666666666666
+474,39665,Parneet Kaur,26290,Shanghai 2024,2024-04-23,2024,competition,9.765
+475,22125,Dhiraj Bommadevara,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.484
+476,31020,Parth Sushant Salunkhe,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.301666666666668
+477,17287,Simranjeet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.0475
+478,8734,Deepika Kumari,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.184999999999999
+479,45025,Bhajan Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,8.84
+480,17262,Ankita Bhakat,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.129999999999999
+481,27738,Prathamesh Samadhan Jawkar,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.807500000000001
+482,42056,Priyansh ,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.77
+483,43889,Aditi Gopichand Swami,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.803749999999999
+484,39665,Parneet Kaur,27161,Baghdad 2024 Asia Cup,2024-02-20,2024,competition,9.6
+485,22125,Dhiraj Bommadevara,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,competition,9.227
+486,17262,Ankita Bhakat,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,competition,8.433333333333334
+487,45025,Bhajan Kaur,26628,Asian qualifier | #ArcheryinParis,2023-11-09,2023,competition,7.305
+488,22125,Dhiraj Bommadevara,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.391666666666666
+489,17262,Ankita Bhakat,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,8.9175
+490,45025,Bhajan Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,8.96
+491,17287,Simranjeet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,8.695
+492,42056,Priyansh ,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.841666666666665
+493,5354,Abhishek Verma,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.795
+494,39157,Ojas Pravin Deotale,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.815000000000001
+495,43889,Aditi Gopichand Swami,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.705
+496,39665,Parneet Kaur,26629,"Bangkok 2023 Asian - Bangkok, Thailand 2023",2023-11-03,2023,competition,9.688
+497,22125,Dhiraj Bommadevara,20856,Hangzhou 2022,2023-10-02,2023,competition,9.143333333333334
+498,17262,Ankita Bhakat,20856,Hangzhou 2022,2023-10-02,2023,competition,8.905000000000001
+499,45025,Bhajan Kaur,20856,Hangzhou 2022,2023-10-02,2023,competition,9.073333333333334
+500,39157,Ojas Pravin Deotale,20856,Hangzhou 2022,2023-10-02,2023,competition,9.878
+501,5354,Abhishek Verma,20856,Hangzhou 2022,2023-10-02,2023,competition,9.808
+502,43889,Aditi Gopichand Swami,20856,Hangzhou 2022,2023-10-02,2023,competition,9.754
+503,22125,Dhiraj Bommadevara,25395,Paris 2023,2023-08-15,2023,competition,9.451666666666666
+504,45024,Mrinal Chauhan,25395,Paris 2023,2023-08-15,2023,competition,9.21
+505,45025,Bhajan Kaur,25395,Paris 2023,2023-08-15,2023,competition,9.157499999999999
+506,17287,Simranjeet Kaur,25395,Paris 2023,2023-08-15,2023,competition,8.74
+507,17262,Ankita Bhakat,25395,Paris 2023,2023-08-15,2023,competition,9.1525
+508,39157,Ojas Pravin Deotale,25395,Paris 2023,2023-08-15,2023,competition,9.685
+509,27738,Prathamesh Samadhan Jawkar,25395,Paris 2023,2023-08-15,2023,competition,9.74
+510,5354,Abhishek Verma,25395,Paris 2023,2023-08-15,2023,competition,9.77
+511,43889,Aditi Gopichand Swami,25395,Paris 2023,2023-08-15,2023,competition,9.665
+512,39665,Parneet Kaur,25395,Paris 2023,2023-08-15,2023,competition,9.575
+513,22125,Dhiraj Bommadevara,25462,Berlin 2023,2023-07-31,2023,competition,8.8625
+514,45024,Mrinal Chauhan,25462,Berlin 2023,2023-07-31,2023,competition,8.89
+515,17262,Ankita Bhakat,25462,Berlin 2023,2023-07-31,2023,competition,8.88
+516,45025,Bhajan Kaur,25462,Berlin 2023,2023-07-31,2023,competition,7.855
+517,17287,Simranjeet Kaur,25462,Berlin 2023,2023-07-31,2023,competition,8.288333333333334
+518,39157,Ojas Pravin Deotale,25462,Berlin 2023,2023-07-31,2023,competition,9.722
+519,27738,Prathamesh Samadhan Jawkar,25462,Berlin 2023,2023-07-31,2023,competition,9.57
+520,5354,Abhishek Verma,25462,Berlin 2023,2023-07-31,2023,competition,9.62
+521,43889,Aditi Gopichand Swami,25462,Berlin 2023,2023-07-31,2023,competition,9.683
+522,39665,Parneet Kaur,25462,Berlin 2023,2023-07-31,2023,competition,9.530000000000001
+523,31020,Parth Sushant Salunkhe,24223,Limerick 2023,2023-07-03,2023,competition,9.318000000000001
+524,45025,Bhajan Kaur,24223,Limerick 2023,2023-07-03,2023,competition,8.761666666666667
+525,42056,Priyansh ,24223,Limerick 2023,2023-07-03,2023,competition,9.71
+526,27738,Prathamesh Samadhan Jawkar,24223,Limerick 2023,2023-07-03,2023,competition,9.605
+527,39665,Parneet Kaur,24223,Limerick 2023,2023-07-03,2023,competition,9.3325
+528,43889,Aditi Gopichand Swami,24223,Limerick 2023,2023-07-03,2023,competition,9.376999999999999
+529,45024,Mrinal Chauhan,25735,Medellin 2023,2023-06-13,2023,competition,9.2225
+530,22125,Dhiraj Bommadevara,25735,Medellin 2023,2023-06-13,2023,competition,9.309999999999999
+531,45025,Bhajan Kaur,25735,Medellin 2023,2023-06-13,2023,competition,9.25875
+532,17262,Ankita Bhakat,25735,Medellin 2023,2023-06-13,2023,competition,8.915
+533,5354,Abhishek Verma,25735,Medellin 2023,2023-06-13,2023,competition,9.8275
+534,39157,Ojas Pravin Deotale,25735,Medellin 2023,2023-06-13,2023,competition,9.7625
+535,27738,Prathamesh Samadhan Jawkar,25735,Medellin 2023,2023-06-13,2023,competition,9.807500000000001
+536,43889,Aditi Gopichand Swami,25735,Medellin 2023,2023-06-13,2023,competition,9.74
+537,39665,Parneet Kaur,25735,Medellin 2023,2023-06-13,2023,competition,9.703333333333333
+538,31020,Parth Sushant Salunkhe,25418,Singapore 2023 Asia Cup,2023-06-05,2023,competition,9.258
+539,42056,Priyansh ,25418,Singapore 2023 Asia Cup,2023-06-05,2023,competition,9.815999999999999
+540,22125,Dhiraj Bommadevara,26055,Shanghai 2023,2023-05-16,2023,competition,9.3425
+541,17287,Simranjeet Kaur,26055,Shanghai 2023,2023-05-16,2023,competition,8.9
+542,45025,Bhajan Kaur,26055,Shanghai 2023,2023-05-16,2023,competition,8.98
+543,17262,Ankita Bhakat,26055,Shanghai 2023,2023-05-16,2023,competition,8.875
+544,39157,Ojas Pravin Deotale,26055,Shanghai 2023,2023-05-16,2023,competition,9.735
+545,27738,Prathamesh Samadhan Jawkar,26055,Shanghai 2023,2023-05-16,2023,competition,9.7275
+546,43889,Aditi Gopichand Swami,26055,Shanghai 2023,2023-05-16,2023,competition,9.508333333333333
+547,45024,Mrinal Chauhan,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,competition,9.27
+548,5354,Abhishek Verma,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,competition,9.815000000000001
+549,39665,Parneet Kaur,26183,Tashkent 2023 Asia Cup,2023-04-29,2023,competition,9.673333333333332
+550,22125,Dhiraj Bommadevara,25394,Antalya 2023,2023-04-18,2023,competition,9.291666666666668
+551,45025,Bhajan Kaur,25394,Antalya 2023,2023-04-18,2023,competition,8.899999999999999
+552,17287,Simranjeet Kaur,25394,Antalya 2023,2023-04-18,2023,competition,8.94
+553,17262,Ankita Bhakat,25394,Antalya 2023,2023-04-18,2023,competition,8.91
+554,39157,Ojas Pravin Deotale,25394,Antalya 2023,2023-04-18,2023,competition,9.7925
+555,27738,Prathamesh Samadhan Jawkar,25394,Antalya 2023,2023-04-18,2023,competition,9.79625
+556,43889,Aditi Gopichand Swami,25394,Antalya 2023,2023-04-18,2023,competition,9.725000000000001
+557,31020,Parth Sushant Salunkhe,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,competition,9.16
+558,42056,Priyansh ,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,competition,9.748999999999999
+559,39665,Parneet Kaur,25611,Taoyuan 2023 Asia Cup,2023-03-14,2023,competition,9.61375
+560,31020,Parth Sushant Salunkhe,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,8.98
+561,45024,Mrinal Chauhan,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,8.661249999999999
+562,39157,Ojas Pravin Deotale,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,8.82
+563,42056,Priyansh ,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,9.684
+564,43889,Aditi Gopichand Swami,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,9.577000000000002
+565,39665,Parneet Kaur,25501,Sharjah 2022 Asia Cup,2022-12-20,2022,competition,9.52
+566,27737,Komalika Bari,24210,Medellin 2022,2022-07-18,2022,competition,8.92
+567,42056,Priyansh ,24210,Medellin 2022,2022-07-18,2022,competition,9.78
+568,5354,Abhishek Verma,20555,Birmingham 2022 World Games,2022-07-07,2022,competition,9.82
+569,17262,Ankita Bhakat,24209,Paris 2022,2022-06-21,2022,competition,8.94
+570,8734,Deepika Kumari,24209,Paris 2022,2022-06-21,2022,competition,8.86
+571,17287,Simranjeet Kaur,24209,Paris 2022,2022-06-21,2022,competition,8.86
+572,5354,Abhishek Verma,24209,Paris 2022,2022-06-21,2022,competition,9.88
+573,27737,Komalika Bari,24208,Gwangju 2022,2022-05-16,2022,competition,8.62
+574,17262,Ankita Bhakat,24208,Gwangju 2022,2022-05-16,2022,competition,8.42
+575,17287,Simranjeet Kaur,24208,Gwangju 2022,2022-05-16,2022,competition,8.17
+576,5354,Abhishek Verma,24208,Gwangju 2022,2022-05-16,2022,competition,9.85
+577,31020,Parth Sushant Salunkhe,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,9.19
+578,45024,Mrinal Chauhan,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,9.01
+579,45025,Bhajan Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,8.67
+580,27738,Prathamesh Samadhan Jawkar,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,9.62
+581,39665,Parneet Kaur,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,9.58
+582,43889,Aditi Gopichand Swami,24666,Sulaymaniyah 2022 Asia Cup,2022-05-06,2022,competition,9.47
+583,17262,Ankita Bhakat,24207,Antalya 2022,2022-04-18,2022,competition,8.92
+584,17287,Simranjeet Kaur,24207,Antalya 2022,2022-04-18,2022,competition,8.76
+585,27737,Komalika Bari,24207,Antalya 2022,2022-04-18,2022,competition,8.71
+586,5354,Abhishek Verma,24207,Antalya 2022,2022-04-18,2022,competition,9.64
+587,31020,Parth Sushant Salunkhe,24684,Phuket 2022,2022-03-14,2022,competition,9.19
+588,22125,Dhiraj Bommadevara,24684,Phuket 2022,2022-03-14,2022,competition,9.11
+589,42056,Priyansh ,24684,Phuket 2022,2022-03-14,2022,competition,9.64
+590,27738,Prathamesh Samadhan Jawkar,24684,Phuket 2022,2022-03-14,2022,competition,9.61
+591,43889,Aditi Gopichand Swami,24684,Phuket 2022,2022-03-14,2022,competition,9.47
+592,39665,Parneet Kaur,24684,Phuket 2022,2022-03-14,2022,competition,9.35
+593,31020,Parth Sushant Salunkhe,23746,2021 Asian Championships,2021-11-13,2021,competition,9.31
+594,17262,Ankita Bhakat,23746,2021 Asian Championships,2021-11-13,2021,competition,9.12
+595,27737,Komalika Bari,23746,2021 Asian Championships,2021-11-13,2021,competition,8.94
+596,5354,Abhishek Verma,23746,2021 Asian Championships,2021-11-13,2021,competition,9.82
+597,39665,Parneet Kaur,23746,2021 Asian Championships,2021-11-13,2021,competition,9.72
+598,31020,Parth Sushant Salunkhe,22722,Yankton 2021,2021-09-19,2021,competition,8.83
+599,17262,Ankita Bhakat,22722,Yankton 2021,2021-09-19,2021,competition,8.65
+600,27737,Komalika Bari,22722,Yankton 2021,2021-09-19,2021,competition,8.53
+601,5354,Abhishek Verma,22722,Yankton 2021,2021-09-19,2021,competition,9.65
+602,31020,Parth Sushant Salunkhe,22723,Wroclaw 2021,2021-08-09,2021,competition,9.21
+603,22125,Dhiraj Bommadevara,22723,Wroclaw 2021,2021-08-09,2021,competition,9.08
+604,27737,Komalika Bari,22723,Wroclaw 2021,2021-08-09,2021,competition,9.11
+605,27738,Prathamesh Samadhan Jawkar,22723,Wroclaw 2021,2021-08-09,2021,competition,9.58
+606,42056,Priyansh ,22723,Wroclaw 2021,2021-08-09,2021,competition,9.49
+607,39665,Parneet Kaur,22723,Wroclaw 2021,2021-08-09,2021,competition,9.57
+608,8734,Deepika Kumari,14904,Tokyo 2020 Olympics,2021-07-23,2021,competition,9.21
+609,22125,Dhiraj Bommadevara,22720,Paris 2021,2021-06-21,2021,competition,9.1
+610,8734,Deepika Kumari,22720,Paris 2021,2021-06-21,2021,competition,9.36
+611,17262,Ankita Bhakat,22720,Paris 2021,2021-06-21,2021,competition,9.22
+612,27737,Komalika Bari,22720,Paris 2021,2021-06-21,2021,competition,9.0
+613,5354,Abhishek Verma,22720,Paris 2021,2021-06-21,2021,competition,9.81
+614,22125,Dhiraj Bommadevara,22718,Guatemala City 2021,2021-04-19,2021,competition,9.22
+615,17262,Ankita Bhakat,22718,Guatemala City 2021,2021-04-19,2021,competition,9.35
+616,8734,Deepika Kumari,22718,Guatemala City 2021,2021-04-19,2021,competition,9.32
+617,27737,Komalika Bari,22718,Guatemala City 2021,2021-04-19,2021,competition,9.15
+618,8734,Deepika Kumari,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,competition,9.1
+619,17262,Ankita Bhakat,21967,Asian CQT for Tokyo 2020,2019-11-28,2019,competition,8.79
+620,8734,Deepika Kumari,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,competition,9.1
+621,17262,Ankita Bhakat,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,competition,8.79
+622,5354,Abhishek Verma,21190,Bangkok 2019 Asian Archery Championships,2019-11-22,2019,competition,9.79
+623,31020,Parth Sushant Salunkhe,19874,Madrid 2019,2019-08-19,2019,competition,9.17
+624,27737,Komalika Bari,19874,Madrid 2019,2019-08-19,2019,competition,9.03
+625,27738,Prathamesh Samadhan Jawkar,19874,Madrid 2019,2019-08-19,2019,competition,9.22
+626,5354,Abhishek Verma,26147,Hermosillo 2023,,,competition,9.82
+627,8734,Deepika Kumari,27828,Tlaxcala 2024,,,competition,9.116666666666667
+628,22125,Dhiraj Bommadevara,26147,Hermosillo 2023,,,competition,9.423333333333334
+629,22125,Dhiraj Bommadevara,27828,Tlaxcala 2024,,,competition,9.27
+630,27738,Prathamesh Samadhan Jawkar,26147,Hermosillo 2023,,,competition,9.933333333333332
+631,42056,Priyansh ,27828,Tlaxcala 2024,,,competition,9.73
+632,43889,Aditi Gopichand Swami,26147,Hermosillo 2023,,,competition,9.67
