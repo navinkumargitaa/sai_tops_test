@@ -50,7 +50,9 @@ def main():
             athlete_id=int(row['athlete_id']),  # Athlete ID
             athlete_name=row['athlete_name'],  # Athlete name
             competition_id=int(row['competition_id']),  # Competition ID
-            comp_new_short_name=row['comp_new_short_name'],  # Short name for competition
+            comp_name=row['comp_name'],  # Short name for competition
+            comp_date=row['comp_date'],
+            comp_year=row['comp_year'],
             qual_avg_arrow=float(row['qual_avg_arrow']) if pd.notnull(row['qual_avg_arrow']) else None,  # Qualification round average
             elem_avg_arrow=float(row['elem_avg_arrow']) if pd.notnull(row['elem_avg_arrow']) else None,  # Elimination round average
             competition_avg_arrow=float(row['competition_avg_arrow']) if pd.notnull(row['competition_avg_arrow']) else None  # Overall average

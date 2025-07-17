@@ -107,7 +107,8 @@ def read_archery_qual_results():
     FROM sai.archery_competition_ind_qual_result a
     JOIN sai.archery_competition b
         ON a.competition_id = b.competition_id
-    WHERE a.athlete_id IN ({ID_LIST_STR});
+    WHERE a.athlete_id IN ({ID_LIST_STR})
+        AND b.competition_sublevel != 52;
     """
     return query
 
@@ -142,6 +143,7 @@ def read_archery_elem_results():
         ON a.competition_id = b.competition_id
     LEFT JOIN sai.archery_competition_individual_match c
         ON a.competition_ind_match_id = c.row_id
-    WHERE a.athlete_id IN ({ID_LIST_STR});
+    WHERE a.athlete_id IN ({ID_LIST_STR})
+        AND b.competition_sublevel != 52;
     """
     return query

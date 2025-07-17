@@ -78,7 +78,49 @@ def get_competition_ranking():
 
     return df
 
+def fill_missing_short_name(
+    df: pd.DataFrame,
+    short_name_col: str,
+    full_name_col: str,
+    place_col: str,
+    date_col: str,
+    num_words_from_full_name: int = 3,
+    default_place: str = "Unknown"
+) -> pd.DataFrame:
+    """
+    Fills missing or empty values in the short name column using a pattern based on
+    the full name, place, and year from a date column.
 
+    Parameters:
+        df (pd.DataFrame): The input DataFrame.
+        short_name_col (str): Column name for the short name to be filled.
+        full_name_col (str): Column name for the full name to extract from.
+        place_col (str): Column name for the place.
+        date_col (str): Column name for the date.
+        num_words_from_full_name (int): Number of words to take from the full name (default: 3).
+        default_place (str): Value to use when place is missing (default: "Unknown").
+
+    Returns:
+        pd.DataFrame: DataFrame with updated short name column.
+    """
+    # Ensure date is in datetime format
+    df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+
+    # Clean and fill missing short names
+    df[short_name_col] = df[short_name_col].fillna('').str.strip()
+
+    # Identify missing short name entries
+    mask = df[short_name_col] == ''
+
+    # Build short name for missing entries
+    df.loc[mask, short_name_col] = (
+        df.loc[mask, full_name_col].fillna('')
+        .str.split().str[:num_words_from_full_name].str.join(' ') + " - " +
+        df.loc[mask, place_col].fillna(default_place) + " " +
+        df.loc[mask, date_col].dt.year.fillna(0).astype(int).astype(str)
+    )
+
+    return df
 
 def compute_avg_arrow_score(sp_str):
     """
@@ -101,42 +143,85 @@ def compute_avg_arrow_score(sp_str):
         return None
 
 
+
+# ---- Qualification Data Processing ----
+def prepare_qualification_data():
+    """
+    Load, clean, and process qualification data.
+    Returns:
+        pd.DataFrame: Qualification data with computed average arrow score.
+    """
+    # Load data
+    qual_query = read_archery_qual_results()
+    qual_df = pd.read_sql_query(qual_query, con=sai_db_engine)
+
+    # Clean comp_name
+    qual_df = fill_missing_short_name(
+        qual_df,
+        short_name_col='comp_name',
+        full_name_col='comp_full_name',
+        place_col='comp_place',
+        date_col='comp_date'
+    )
+
+    # Calculate average (fixed 72 arrows)
+    qual_df['avg_arrow_score_qualification'] = pd.to_numeric(
+        (qual_df['qual_score'] / 72).round(2), errors='coerce'
+    )
+
+    return qual_df
+
+
+# ---- Elimination Data Processing ----
+def prepare_elimination_data():
+    """
+    Load, clean, and process elimination data.
+    Returns:
+        pd.DataFrame: Elimination data with computed average arrow score.
+    """
+    # Load data
+    elem_query = read_archery_elem_results()
+    elem_df = pd.read_sql_query(elem_query, con=sai_db_engine)
+
+    # Clean comp_name
+    elem_df = fill_missing_short_name(
+        elem_df,
+        short_name_col='comp_name',
+        full_name_col='comp_full_name',
+        place_col='comp_place',
+        date_col='comp_date'
+    )
+
+    # Compute arrow average from set_points
+    elem_df['avg_arrow_score_elemination_round'] = pd.to_numeric(
+        elem_df['set_points'].apply(compute_avg_arrow_score), errors='coerce'
+    )
+
+    return elem_df
+
+# ---- Final Orchestrator ----
 def get_arrow_average():
     """
-    Extract and compute qualification, elimination, and overall average arrow scores.
+    Get the overall arrow average per athlete per competition by merging
+    qualification and elimination scores.
 
     Returns:
-        pd.DataFrame: Merged DataFrame containing all average scores per athlete per competition.
+        pd.DataFrame: Final DataFrame with qual, elim, overall averages, comp_date, and year.
     """
-    # Step 1: Load qualification and elimination data
-    query_qual = read_archery_qual_results()
-    query_elem = read_archery_elem_results()
+    # Prepare both datasets
+    qual_df = prepare_qualification_data()
+    elem_df = prepare_elimination_data()
 
-    qual_data = pd.read_sql_query(query_qual, con=sai_db_engine)
-    elem_data = pd.read_sql_query(query_elem, con=sai_db_engine)
+    # Ensure comp_date is datetime
+    qual_df['comp_date'] = pd.to_datetime(qual_df['comp_date'], errors='coerce')
+    elem_df['comp_date'] = pd.to_datetime(elem_df['comp_date'], errors='coerce')
 
-    # Step 2: Prepare and format date & competition name fields
-    for df in [qual_data, elem_data]:
-        df['comp_date'] = pd.to_datetime(df['comp_date'])
-        df['comp_new_short_name'] = df['comp_place'] + ' ' + df['comp_date'].dt.year.astype(str)
+    # Add year column to qualification
+    qual_df['comp_year'] = qual_df['comp_date'].dt.year
 
-    # Step 3: Calculate qualification average score (fixed 72 arrows)
-    qual_data['avg_arrow_score_qualification'] = round(qual_data['qual_score'] / 72, 2)
-
-    # Step 4: Calculate elimination round average score using set points
-    elem_data['avg_arrow_score_elemination_round'] = elem_data['set_points'].apply(compute_avg_arrow_score)
-
-    # Step 5: Convert to numeric and handle missing/invalid values
-    elem_data['avg_arrow_score_elemination_round'] = pd.to_numeric(
-        elem_data['avg_arrow_score_elemination_round'], errors='coerce'
-    )
-    qual_data['avg_arrow_score_qualification'] = pd.to_numeric(
-        qual_data['avg_arrow_score_qualification'], errors='coerce'
-    )
-
-    # Step 6: Aggregate elimination scores per athlete per competition
-    elim_avg = (
-        elem_data.groupby(['athlete_id', 'athlete_name', 'competition_id', 'comp_new_short_name'])[
+    # Aggregate elimination scores
+    elem_avg_df = (
+        elem_df.groupby(['athlete_id', 'athlete_name', 'competition_id', 'comp_name'])[
             'avg_arrow_score_elemination_round'
         ]
         .mean()
@@ -144,26 +229,167 @@ def get_arrow_average():
         .rename(columns={'avg_arrow_score_elemination_round': 'elem_avg_arrow'})
     )
 
-    # Step 7: Select and rename qualification scores
-    qual_avg = qual_data[[
-        'athlete_id', 'athlete_name', 'competition_id', 'comp_new_short_name', 'avg_arrow_score_qualification'
+    # Select qualification scores + comp_date and comp_year
+    qual_avg_df = qual_df[[
+        'athlete_id', 'athlete_name', 'competition_id', 'comp_name',
+        'avg_arrow_score_qualification', 'comp_date', 'comp_year'
     ]].rename(columns={'avg_arrow_score_qualification': 'qual_avg_arrow'})
 
-    # Step 8: Merge qualification and elimination scores
+    # Merge both
     merged = pd.merge(
-        elim_avg,
-        qual_avg,
-        on=['athlete_id', 'athlete_name', 'competition_id', 'comp_new_short_name'],
+        qual_avg_df,
+        elem_avg_df,
+        on=['athlete_id', 'athlete_name', 'competition_id', 'comp_name'],
         how='outer'
     )
 
-    # Step 9: Calculate overall average arrow score
+    # Compute overall average
     merged['competition_avg_arrow'] = merged[['qual_avg_arrow', 'elem_avg_arrow']].mean(axis=1)
 
-    # Step 10: Final column selection and ordering
+    # Ensure proper datetime format before returning
+    merged['comp_date'] = pd.to_datetime(merged['comp_date'], errors='coerce')
+    merged['comp_year'] = pd.to_numeric(merged['comp_year'], errors='coerce').astype('Int64')
+
+    # Final DataFrame
     final_df = merged[[
-        'athlete_id', 'athlete_name', 'competition_id', 'comp_new_short_name',
+        'athlete_id', 'athlete_name', 'competition_id', 'comp_name',
+        'comp_date', 'comp_year',
         'qual_avg_arrow', 'elem_avg_arrow', 'competition_avg_arrow'
     ]]
 
+    # Melt the DataFrame to convert the average columns into rows
+    df_long = pd.melt(
+        final_df,
+        id_vars=[
+            'athlete_id', 'athlete_name', 'competition_id',
+            'comp_name', 'comp_date', 'comp_year'
+        ],
+        value_vars=[
+            'qual_avg_arrow', 'elem_avg_arrow', 'competition_avg_arrow'
+        ],
+        var_name='type_arrow_avg',
+        value_name='arrow_average'
+    )
+
+    # Optional: Clean up the 'type_arrow_avg' values for readability
+    df_long['type_arrow_avg'] = df_long['type_arrow_avg'].replace({
+        'qual_avg_arrow': 'qualification',
+        'elem_avg_arrow': 'elimination',
+        'competition_avg_arrow': 'competition'
+    })
+
     return final_df
+
+# # ---- Final Orchestrator ----
+# def get_arrow_average():
+#     """
+#     Get the overall arrow average per athlete per competition by merging
+#     qualification and elimination scores.
+#
+#     Returns:
+#         pd.DataFrame: Final DataFrame with qual, elim, and overall averages.
+#     """
+#     # Prepare both datasets
+#     qual_df = prepare_qualification_data()
+#     elem_df = prepare_elimination_data()
+#
+#     # Aggregate elimination scores
+#     elem_avg_df = (
+#         elem_df.groupby(['athlete_id', 'athlete_name', 'competition_id', 'comp_name'])[
+#             'avg_arrow_score_elemination_round'
+#         ]
+#         .mean()
+#         .reset_index()
+#         .rename(columns={'avg_arrow_score_elemination_round': 'elem_avg_arrow'})
+#     )
+#
+#     # Select qualification scores
+#     qual_avg_df = qual_df[[
+#         'athlete_id', 'athlete_name', 'competition_id', 'comp_name', 'avg_arrow_score_qualification'
+#     ]].rename(columns={'avg_arrow_score_qualification': 'qual_avg_arrow'})
+#
+#     # Merge both
+#     merged = pd.merge(
+#         qual_avg_df,
+#         elem_avg_df,
+#         on=['athlete_id', 'athlete_name', 'competition_id', 'comp_name'],
+#         how='outer'
+#     )
+#
+#     # Compute overall average
+#     merged['competition_avg_arrow'] = merged[['qual_avg_arrow', 'elem_avg_arrow']].mean(axis=1)
+#
+#     # Final result
+#     final_df = merged[[
+#         'athlete_id', 'athlete_name', 'competition_id', 'comp_name',
+#         'qual_avg_arrow', 'elem_avg_arrow', 'competition_avg_arrow'
+#     ]]
+#
+#     return final_df
+
+
+# def get_arrow_average():
+#     """
+#     Extract and compute qualification, elimination, and overall average arrow scores.
+#
+#     Returns:
+#         pd.DataFrame: Merged DataFrame containing all average scores per athlete per competition.
+#     """
+#     # Step 1: Load qualification and elimination data
+#     query_qual = read_archery_qual_results()
+#     query_elem = read_archery_elem_results()
+#
+#     qual_data = pd.read_sql_query(query_qual, con=sai_db_engine)
+#     elem_data = pd.read_sql_query(query_elem, con=sai_db_engine)
+#
+#     qual_data = fill_missing_short_name(qual_data,short_name_col='comp_name',full_name_col='comp_full_name',place_col='comp_place',date_col='comp_date')
+#     elem_data = fill_missing_short_name(elem_data,short_name_col='comp_name',full_name_col='comp_full_name',place_col='comp_place',date_col='comp_date')
+#
+#
+#     # Step 3: Calculate qualification average score (fixed 72 arrows)
+#     qual_data['avg_arrow_score_qualification'] = round(qual_data['qual_score'] / 72, 2)
+#
+#     # Step 4: Calculate elimination round average score using set points
+#     elem_data['avg_arrow_score_elemination_round'] = elem_data['set_points'].apply(compute_avg_arrow_score)
+#
+#     # Step 5: Convert to numeric and handle missing/invalid values
+#     elem_data['avg_arrow_score_elemination_round'] = pd.to_numeric(
+#         elem_data['avg_arrow_score_elemination_round'], errors='coerce'
+#     )
+#     qual_data['avg_arrow_score_qualification'] = pd.to_numeric(
+#         qual_data['avg_arrow_score_qualification'], errors='coerce'
+#     )
+#
+#     # Step 6: Aggregate elimination scores per athlete per competition
+#     elim_avg = (
+#         elem_data.groupby(['athlete_id', 'athlete_name', 'competition_id', 'comp_name'])[
+#             'avg_arrow_score_elemination_round'
+#         ]
+#         .mean()
+#         .reset_index()
+#         .rename(columns={'avg_arrow_score_elemination_round': 'elem_avg_arrow'})
+#     )
+#
+#     # Step 7: Select and rename qualification scores
+#     qual_avg = qual_data[[
+#         'athlete_id', 'athlete_name', 'competition_id', 'comp_name', 'avg_arrow_score_qualification'
+#     ]].rename(columns={'avg_arrow_score_qualification': 'qual_avg_arrow'})
+#
+#     # Step 8: Merge qualification and elimination scores
+#     merged = pd.merge(
+#         elim_avg,
+#         qual_avg,
+#         on=['athlete_id', 'athlete_name', 'competition_id', 'comp_name'],
+#         how='outer'
+#     )
+#
+#     # Step 9: Calculate overall average arrow score
+#     merged['competition_avg_arrow'] = merged[['qual_avg_arrow', 'elem_avg_arrow']].mean(axis=1)
+#
+#     # Step 10: Final column selection and ordering
+#     final_df = merged[[
+#         'athlete_id', 'athlete_name', 'competition_id', 'comp_name',
+#         'qual_avg_arrow', 'elem_avg_arrow', 'competition_avg_arrow'
+#     ]]
+#
+#     return final_df

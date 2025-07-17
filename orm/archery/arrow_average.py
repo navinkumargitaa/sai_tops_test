@@ -9,7 +9,7 @@ Author: navin@gitaa.in
 
 __author__ = "navin@gitaa.in"
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -41,7 +41,11 @@ class ArcheryArrowAverage(Base):
 
     competition_id = Column(Integer, nullable=False)  # Competition's unique identifier
 
-    comp_new_short_name = Column(String(100), nullable=False)  # Short name for competition (used in charts)
+    comp_name = Column(String(100), nullable=False)  # Short name for competition (used in charts)
+
+    comp_date = Column(Date) # Comp Date
+
+    comp_year = Column(Integer, nullable=False) # Comp Year
 
     qual_avg_arrow = Column(Float, nullable=True)  # Average arrow score in qualification round
 
