@@ -30,15 +30,20 @@ def get_end_of_october_ranking():
     query = read_archery_ranking()
     df = pd.read_sql_query(query, con=sai_db_engine)
 
-    # Step 2: Parse rank date and extract year/month
+    df_induction = pd.read_csv("/home/navin/Desktop/SAI/sai_tops_testing/data/archery/master_athlete_bio.csv")
+
+    selected_cols = ['athlete_id', 'name', 'first_induction', 'first_exclusion', 'second_inclusion']
+    df_induction_selected = df_induction[selected_cols]
+
+    # Step 3: Parse rank date and extract year/month
     df['rank_date_issued'] = pd.to_datetime(df['rank_date_issued'], errors='coerce')
     df['year'] = df['rank_date_issued'].dt.year
     df['month'] = df['rank_date_issued'].dt.month
 
-    # Step 3: Filter for October rankings only
+    # Step 4: Filter for October rankings only
     october_df = df[df['month'] == 10]
 
-    # Step 4: Get the last ranking record for each athlete per year
+    # Step 5: Get the last ranking record for each athlete per year
     end_of_october = (
         october_df
         .sort_values('rank_date_issued')
@@ -46,9 +51,53 @@ def get_end_of_october_ranking():
         .tail(1)
     )
 
-    # Step 5: Keep only relevant columns
-    end_of_october = end_of_october[['athlete_id', 'year', 'rank', 'points', 'rank_date_issued']]
-    return end_of_october
+    # Step 6: Keep only relevant columns
+    end_of_october = end_of_october[['athlete_id', 'year', 'current_rank', 'rank_date_issued']]
+
+    # Step 6: Parse induction-related dates
+    date_columns = ['first_induction', 'first_exclusion', 'second_inclusion']
+    for col in date_columns:
+        df_induction_selected[col] = pd.to_datetime(
+            df_induction_selected[col], format="%d/%m/%Y", errors='coerce'
+        )
+
+    # Step 7: Merge induction info
+    merged_df = end_of_october.merge(df_induction_selected, on='athlete_id', how='left')
+
+    # Step 8: Status tagging
+    def get_status(row):
+        rank_date = row['rank_date_issued']
+        fi = row['first_induction']
+        fe = row['first_exclusion']
+        si = row['second_inclusion']
+
+        if pd.isnull(fi):
+            return 'no_induction'
+        if rank_date < fi:
+            return 'pre_induction'
+        if pd.notnull(fe) and fi <= rank_date < fe:
+            return 'post_induction'
+        if pd.notnull(si) and fe <= rank_date < si:
+            return 'excluded'
+        if pd.notnull(si) and rank_date >= si:
+            return 'second_induction'
+        if pd.notnull(fe) and rank_date >= fe:
+            return 'excluded'
+        return 'post_induction'
+
+    merged_df['ranking_status'] = merged_df.apply(get_status, axis=1)
+
+    # Then select the required columns
+    merged_df = merged_df[[
+        'athlete_id',
+        'year',
+        'name',
+        'current_rank',
+        'rank_date_issued',
+        'ranking_status'
+    ]]
+
+    return merged_df
 
 
 def get_competition_ranking():

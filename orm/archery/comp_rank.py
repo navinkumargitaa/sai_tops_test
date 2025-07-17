@@ -6,9 +6,8 @@ Stores each athlete's competition ranking snapshot as of the end of October each
 __author__ = "navin@gitaa.in"
 
 from sqlalchemy import Column, Integer, Date, String
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+from orm.archery.base import Base
 
 class ArcheryCompetitionRanking(Base):
     __tablename__ = 'archery_competition_ranking_viz'
