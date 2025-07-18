@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from orm.archery import ArcheryRankingProgression, Base
 from model.archery import sai_db_engine
-from services.archery.analysis import get_end_of_october_ranking
+from services.archery.analysis import get_end_of_september_ranking
 
 
 def main():
@@ -29,10 +29,13 @@ def main():
     Base.metadata.create_all(sai_db_engine)
     print("✅ Table created successfully (or already exists).")
 
+    # Step 2: Force table creation
+    Base.metadata.create_all(bind=sai_db_engine, tables=[ArcheryRankingProgression.__table__])
+    print("Table creation attempted.")
 
 
     # Step 2: Extract and transform ranking data
-    end_of_october_ranking = get_end_of_october_ranking()
+    end_of_october_ranking = get_end_of_september_ranking()
     print("✅ Data extracted and transformed:")
     print(end_of_october_ranking.head())
 
@@ -49,7 +52,7 @@ def main():
         records = [
             ArcheryRankingProgression(
                 athlete_id=int(row['athlete_id']),
-                athlete_name=row['name'],
+                athlete_name=row['athlete_name'],
                 year=int(row['year']),
                 rank=int(row['current_rank']) if pd.notnull(row['current_rank']) else None,
                 ranking_status=row['ranking_status'],

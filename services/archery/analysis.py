@@ -19,9 +19,9 @@ from model.archery.database import (
 )
 
 
-def get_end_of_october_ranking():
+def get_end_of_september_ranking():
     """
-    Extract and process archery rankings to get end-of-October snapshot.
+    Extract and process archery rankings to get end-of-October snapshot with status tagging.
 
     Returns:
         pd.DataFrame: A cleaned DataFrame with the latest October ranking per athlete per year.
@@ -30,41 +30,26 @@ def get_end_of_october_ranking():
     query = read_archery_ranking()
     df = pd.read_sql_query(query, con=sai_db_engine)
 
+    # Step 2: Load induction details
     df_induction = pd.read_csv("/home/navin/Desktop/SAI/sai_tops_testing/data/archery/master_athlete_bio.csv")
-
     selected_cols = ['athlete_id', 'name', 'first_induction', 'first_exclusion', 'second_inclusion']
     df_induction_selected = df_induction[selected_cols]
 
-    # Step 3: Parse rank date and extract year/month
+    # Step 3: Parse all dates
     df['rank_date_issued'] = pd.to_datetime(df['rank_date_issued'], errors='coerce')
     df['year'] = df['rank_date_issued'].dt.year
     df['month'] = df['rank_date_issued'].dt.month
 
-    # Step 4: Filter for October rankings only
-    october_df = df[df['month'] == 10]
-
-    # Step 5: Get the last ranking record for each athlete per year
-    end_of_october = (
-        october_df
-        .sort_values('rank_date_issued')
-        .groupby(['athlete_id', 'year'])
-        .tail(1)
-    )
-
-    # Step 6: Keep only relevant columns
-    end_of_october = end_of_october[['athlete_id', 'year', 'current_rank', 'rank_date_issued']]
-
-    # Step 6: Parse induction-related dates
     date_columns = ['first_induction', 'first_exclusion', 'second_inclusion']
     for col in date_columns:
         df_induction_selected[col] = pd.to_datetime(
             df_induction_selected[col], format="%d/%m/%Y", errors='coerce'
         )
 
-    # Step 7: Merge induction info
-    merged_df = end_of_october.merge(df_induction_selected, on='athlete_id', how='left')
+    # Step 4: Merge full ranking data with induction info before filtering
+    merged_df = df.merge(df_induction_selected, on='athlete_id', how='left')
 
-    # Step 8: Status tagging
+    # Step 5: Apply status tagging to all rows
     def get_status(row):
         rank_date = row['rank_date_issued']
         fi = row['first_induction']
@@ -87,17 +72,37 @@ def get_end_of_october_ranking():
 
     merged_df['ranking_status'] = merged_df.apply(get_status, axis=1)
 
-    # Then select the required columns
-    merged_df = merged_df[[
+    # TODO: Change the logic if needed
+    # Step 6: Filter for October rankings only
+    # october_df = merged_df[merged_df['month'] == 9]
+    #
+    # # Step 7: Get the last October ranking per athlete per year
+    # end_of_september = (
+    #     october_df
+    #     .sort_values('rank_date_issued')
+    #     .groupby(['athlete_id', 'year'])
+    #     .tail(1)
+    # )
+
+    # Step 6: Get the last ranking of each month per athlete per year
+    monthly_last_ranking = (
+        merged_df
+        .sort_values('rank_date_issued')
+        .groupby(['athlete_id', 'year', 'month'], as_index=False)
+        .tail(1)
+    )
+
+    # Step 8: Select required columns
+    final_df = monthly_last_ranking[[
         'athlete_id',
         'year',
-        'name',
+        'athlete_name',
         'current_rank',
         'rank_date_issued',
         'ranking_status'
     ]]
 
-    return merged_df
+    return final_df
 
 
 def get_competition_ranking():
@@ -326,8 +331,8 @@ def get_arrow_average():
         'elem_avg_arrow': 'elimination',
         'competition_avg_arrow': 'competition'
     })
-
-    return final_df
+    df_long = df_long.dropna()
+    return df_long
 
 # # ---- Final Orchestrator ----
 # def get_arrow_average():

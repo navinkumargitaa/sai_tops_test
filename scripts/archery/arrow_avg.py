@@ -35,6 +35,10 @@ def main():
     Base.metadata.create_all(sai_db_engine)
     print("Table created successfully (or already exists).")
 
+    # Step 2: Force table creation
+    Base.metadata.create_all(bind=sai_db_engine, tables=[ArcheryArrowAverage.__table__])
+    print("Table creation attempted.")
+
     # Step 2: Extract and transform data using business logic from service layer
     arrow_avg_data = get_arrow_average()  # Returns a pandas DataFrame
     print("Data extracted and transformed:")
@@ -47,17 +51,16 @@ def main():
     # Step 4: Convert DataFrame rows to a list of ORM model instances
     records = [
         ArcheryArrowAverage(
-            athlete_id=int(row['athlete_id']),  # Athlete ID
-            athlete_name=row['athlete_name'],  # Athlete name
-            competition_id=int(row['competition_id']),  # Competition ID
-            comp_name=row['comp_name'],  # Short name for competition
+            athlete_id=int(row['athlete_id']),
+            athlete_name=row['athlete_name'],
+            competition_id=int(row['competition_id']),
+            comp_name=row['comp_name'],
             comp_date=row['comp_date'],
-            comp_year=row['comp_year'],
-            qual_avg_arrow=float(row['qual_avg_arrow']) if pd.notnull(row['qual_avg_arrow']) else None,  # Qualification round average
-            elem_avg_arrow=float(row['elem_avg_arrow']) if pd.notnull(row['elem_avg_arrow']) else None,  # Elimination round average
-            competition_avg_arrow=float(row['competition_avg_arrow']) if pd.notnull(row['competition_avg_arrow']) else None  # Overall average
+            comp_year=int(row['comp_year']) if pd.notnull(row['comp_year']) else None,
+            type_arrow_avg=row['type_arrow_avg'],
+            arrow_average=float(row['arrow_average']) if pd.notnull(row['arrow_average']) else None
         )
-        for _, row in arrow_avg_data.iterrows()  # Iterate over DataFrame rows
+        for _, row in arrow_avg_data.iterrows()
     ]
 
     # Step 5: Add all records to the session
