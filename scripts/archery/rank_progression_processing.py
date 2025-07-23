@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from orm.archery import ArcheryRankingProgression, Base
 from model.archery import sai_db_engine
-from services.archery.analysis import get_end_of_september_ranking
+from services.archery.analysis import get_end_of_month_ranking
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
 
 
     # Step 2: Extract and transform ranking data
-    end_of_october_ranking = get_end_of_september_ranking()
+    end_of_october_ranking = get_end_of_month_ranking()
     print("✅ Data extracted and transformed:")
     print(end_of_october_ranking.head())
 

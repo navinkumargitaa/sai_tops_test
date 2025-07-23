@@ -19,7 +19,7 @@ from model.archery.database import (
 )
 
 
-def get_end_of_september_ranking():
+def get_end_of_month_ranking():
     """
     Extract and process archery rankings to get end-of-October snapshot with status tagging.
 
@@ -65,7 +65,7 @@ def get_end_of_september_ranking():
         if pd.notnull(si) and fe <= rank_date < si:
             return 'excluded'
         if pd.notnull(si) and rank_date >= si:
-            return 'second_induction'
+            return 'post_induction'
         if pd.notnull(fe) and rank_date >= fe:
             return 'excluded'
         return 'post_induction'
