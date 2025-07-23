@@ -59,7 +59,7 @@ def read_singles_ranking_progression() -> str:
         SELECT DISTINCT 
             a.athlete_id AS athlete_id,
             b.display_name AS athlete_name,
-            a.date AS tournament_date,
+            a.date AS ranking_date,
             a.world_ranking AS world_ranking,
             a.world_tour_ranking AS world_tour_ranking,
             a.olympics AS olympic_rank,
@@ -69,7 +69,6 @@ def read_singles_ranking_progression() -> str:
             ON a.athlete_id = b.athlete_id
         WHERE a.athlete_id IN ({athlete_ids_str})
           AND a.ranking_category_id IN ({ranking_ids_str})
-        ORDER BY b.display_name, a.date;
     """
     return query
 
@@ -83,7 +82,7 @@ def read_doubles_ranking_progression() -> str:
     """
     query = f"""
         SELECT DISTINCT
-            a.date AS tournament_date,
+            a.date AS ranking_date,
             a.world_ranking,
             a.world_tour_ranking,
             a.olympics AS olympic_rank,
@@ -103,8 +102,7 @@ def read_doubles_ranking_progression() -> str:
             ON b.athlete_1_id = a1.athlete_id
         LEFT JOIN sai_badminton_viz_final.badminton_athlete a2 
             ON b.athlete_2_id = a2.athlete_id
-        WHERE {DOUBLES_CONDITIONS}
-        ORDER BY team_display_name, tournament_date;
+        WHERE {DOUBLES_CONDITIONS};
     """
     return query
 
