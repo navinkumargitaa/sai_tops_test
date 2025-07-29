@@ -31,6 +31,10 @@ def main():
     Base.metadata.create_all(sai_db_engine)
     print("Table created successfully (or already exists).")
 
+    # Step 2: Force table creation
+    Base.metadata.create_all(bind=sai_db_engine, tables=[ArcheryAthleteFinalViz.__table__])
+    print("Table creation attempted.")
+
     # Step 3: Set up a session for writing data to the database
     Session = sessionmaker(bind=sai_db_engine)  # Bind session to the DB engine
     session = Session()  # Create a new session instance

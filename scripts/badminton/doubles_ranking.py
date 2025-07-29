@@ -31,7 +31,7 @@ def main():
 
     # Step 1: Ensure the table exists in the database
     Base.metadata.create_all(sai_db_engine)
-    print("✅ Table created successfully (or already exists).")
+    print("Table created successfully (or already exists).")
 
     # Step 2: Force table creation
     Base.metadata.create_all(bind=sai_db_engine, tables=[BadmintonDoublesRanking.__table__])
@@ -39,7 +39,7 @@ def main():
 
     # Step 2: Extract and transform ranking data
     doubles_ranking = get_doubles_ranking_data()
-    print("✅ Data extracted and transformed:")
+    print("Data extracted and transformed:")
 
     # Step 3: Initialize the database session
     Session = sessionmaker(bind=sai_db_engine)
@@ -68,11 +68,11 @@ def main():
 
         session.add_all(records)
         session.commit()
-        print(f"✅ Loaded {len(records)} records into the badminton_doubles_ranking_viz table.")
+        print(f"Loaded {len(records)} records into the badminton_doubles_ranking_viz table.")
 
     except Exception as e:
         session.rollback()
-        print("❌ Commit failed:")
+        print("Commit failed:")
         print(e)
 
     finally:

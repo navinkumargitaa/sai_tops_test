@@ -10,7 +10,8 @@ __author__ = "navin@gitaa.in"
 import pandas as pd
 from model.badminton.database import SessionLocal
 from model.badminton.database import read_singles_ranking_progression,read_doubles_ranking_progression,sai_db_engine
-import matplotlib.pyplot as plt
+
+
 
 def get_singles_ranking_data():
     """
