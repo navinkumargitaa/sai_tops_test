@@ -25,5 +25,6 @@ class AthleteRankCategoryViz(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)     # Surrogate key
     athlete_name = Column(String(255), nullable=False)             # Full name of the athlete
+    event_name = Column(String(50), nullable=False)
     category = Column(String(50), nullable=False)                  # Rank category (e.g., 'top_3', 'top_8', 'not_in_top_8')
     value = Column(Integer, nullable=False, default=0)             # Count of appearances in this category

@@ -44,6 +44,7 @@ def main():
     records = [
         AthleteRankCategoryViz(
             athlete_name=row['athlete_name'],
+            event_name=row['event_name'],
             category=row['category'],
             value=row['value']
         )

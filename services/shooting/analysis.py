@@ -184,7 +184,7 @@ def populate_athlete_rank_distribution() -> None:
 
     # Step 8: Categorize rank for pie chart
     def categorize(rank):
-        if rank is None:
+        if pd.isna(rank):
             return 'Not in Top 8'
         try:
             rank = int(rank)
@@ -199,9 +199,9 @@ def populate_athlete_rank_distribution() -> None:
 
     merged['rank_category'] = merged['last_attained_rank'].apply(categorize)
 
-    # Step 9: Group and aggregate (wide format)
+    # Step 9: Group and aggregate (wide format) by athlete and event
     wide_df = (
-        merged.groupby(['athlete_name', 'rank_category'])
+        merged.groupby(['athlete_name', 'event_name', 'rank_category'])
         .size()
         .unstack(fill_value=0)
         .reset_index()
@@ -212,10 +212,10 @@ def populate_athlete_rank_distribution() -> None:
         })
     )
 
-    # Step 10: Convert to long format (category, athlete_name, value)
+    # Step 10: Convert to long format (category, athlete_name, event_name, value)
     dist_df = pd.melt(
         wide_df,
-        id_vars=['athlete_name'],
+        id_vars=['athlete_name', 'event_name'],
         value_vars=['top_3', 'top_8', 'not_in_top_8'],
         var_name='category',
         value_name='value'
