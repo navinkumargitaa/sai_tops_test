@@ -15,7 +15,7 @@ import pandas as pd
 # -----------------------------#
 
 # Create SQLAlchemy engine
-sai_db_engine = create_engine("mysql+pymysql://root:root@localhost:3306/sai_badminton_viz_final")
+sai_db_engine = create_engine("mysql+pymysql://root:root@localhost:3306/sai_badminton_final")
 SessionLocal = sessionmaker(bind=sai_db_engine)
 
 # -----------------------------#
@@ -106,6 +106,16 @@ def read_doubles_ranking_progression() -> str:
     """
     return query
 
+def read_all_tournament_details():
+    """
+
+    :return:
+    """
+    query = """
+    SELECT * FROM sai_badminton_final.badminton_athlete_tournament where year>2020;
+    """
+
+    return query
 
 def read_singles_tournament_finishes() -> pd.DataFrame:
     """
