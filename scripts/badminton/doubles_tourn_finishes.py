@@ -13,13 +13,13 @@ import pandas as pd
 from sqlalchemy.orm import sessionmaker
 
 # Import ORM model and base class
-from orm.badminton.singles_tournament_finishes import BadmintonSinglesTournamentFinishes,Base
+from orm.badminton.doubles_tournament_finishes import BadmintonDoublesTournamentFinishes,Base
 
 # Import database engine
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_singles_tournament_finishes
+from services.badminton.analysis import process_doubles_tournament_finishes
 
 def main():
     """
@@ -34,11 +34,11 @@ def main():
     print("✅ Table created successfully (or already exists).")
 
     # Step 2: Force table creation
-    Base.metadata.create_all(bind=sai_db_engine, tables=[BadmintonSinglesTournamentFinishes.__table__])
+    Base.metadata.create_all(bind=sai_db_engine, tables=[BadmintonDoublesTournamentFinishes.__table__])
     print("Table creation attempted.")
 
     # Step 2: Extract and transform ranking data
-    singles_tournament_finishes = process_singles_tournament_finishes()
+    doubles_tournament_finishes = process_doubles_tournament_finishes()
     print("✅ Data extracted and transformed:")
 
     # Step 3: Initialize the database session
@@ -51,7 +51,7 @@ def main():
         # session.commit()
 
         records = [
-            BadmintonSinglesTournamentFinishes(
+            BadmintonDoublesTournamentFinishes(
                 athlete_id=int(row["athlete_id"]),
                 athlete_name=row["athlete_name"],
                 tournament_year=int(row["tournament_year"]),
@@ -104,7 +104,7 @@ def main():
                 grade1_SF=int(row["Grade 1_SF"]),
                 grade1_F=int(row["Grade 1_F"])
             )
-            for _, row in singles_tournament_finishes.iterrows()
+            for _, row in doubles_tournament_finishes.iterrows()
         ]
 
         # Insert into DB

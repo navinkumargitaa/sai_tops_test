@@ -9,8 +9,8 @@ from sqlalchemy import Column, Integer, String
 from orm.archery.base import Base
 
 
-class BadmintonSinglesTournamentFinishes(Base):
-    __tablename__ = "badminton_singles_tournament_finishes_viz"
+class BadmintonDoublesTournamentFinishes(Base):
+    __tablename__ = "badminton_doubles_tournament_finishes_viz"
 
     # Index columns
     athlete_id = Column(Integer, primary_key=True)

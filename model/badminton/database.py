@@ -117,7 +117,7 @@ def read_all_tournament_details():
 
     return query
 
-def read_singles_tournament_finishes() -> pd.DataFrame:
+def read_singles_tournament_finishes_old() -> pd.DataFrame:
     """
     Fetch tournament finish data for selected singles athletes.
 
@@ -145,7 +145,7 @@ def read_singles_tournament_finishes() -> pd.DataFrame:
 
     return pd.read_sql(query, sai_db_engine)
 
-def read_tournament_finishes():
+def read_singles_tournament_finishes():
     """
 
     :return:
@@ -172,4 +172,79 @@ def read_tournament_finishes():
     );
     """
 
+    return query
+
+def read_doubles_tournament_finishes():
+    """
+
+    :return:
+    (72435, 70500),  # Satwiksairaj & Chirag
+    (71612, 59966),  # Treesa & Gayatri
+    (69560, 98187),  # Hariharan & Ruban
+    (57372, 94165)
+    """
+
+    query = """
+    SELECT DISTINCT 
+    a.tournament_id AS tournament_id,
+    b.tournament_name AS tournament_name,
+    b.new_grade AS tournament_grade,
+    b.start_date AS tournament_date,
+    b.year AS tournament_year,
+    a.athlete_id AS athlete_id,
+    c.display_name AS athlete_name,  -- Added athlete name
+    a.name AS category,
+    a.position AS final_position
+    FROM sai_badminton_final.badminton_athlete_tournament_draw a
+    INNER JOIN sai_badminton_final.badminton_tournament_details_viz b
+        ON a.tournament_id = b.tournament_id AND a.athlete_id = b.athlete_id
+    INNER JOIN sai_badminton_final.badminton_athlete c
+        ON a.athlete_id = c.athlete_id
+    WHERE a.athlete_id IN (72435,71612,69560,57372);
+
+    """
+
+    return query
+
+def read_singles_notable_wins():
+    """
+
+    :return:
+    """
+    query = """
+    SELECT DISTINCT 
+      a.athlete_id,
+      a.tournament_id,
+      a.tournament_match_id,
+      a.round_name,
+      a.draw_name_full,
+      a.winner,
+      a.team_1_player_1_id,
+      a.team_1_player_1_name,
+      a.team_2_player_1_id,
+      a.team_2_player_1_name,
+      b.tournament_name AS tournament_name,
+      b.new_grade AS tournament_grade,
+      b.start_date as start_date,
+      b.year as year
+        FROM sai_badminton_final.badminton_athlete_match a
+        JOIN sai_badminton_final.badminton_tournament_details_viz b
+        ON a.tournament_id = b.tournament_id
+        where a.athlete_id in (
+            83950, 68870, 73173, 69093, 59687, 74481, 58664, 68322, 
+            99042, 91807, 97168, 70595, 82572)
+        and b.year>2020
+        order by a.tournament_id,a.tournament_match_id;
+    
+    """
+    return query
+
+def read_singles_ranking_table():
+    """
+
+    :return:
+    """
+    query = """
+    select athlete_id,date,world_ranking from sai_badminton_final.badminton_ranking_graph_ind;
+    """
     return query
