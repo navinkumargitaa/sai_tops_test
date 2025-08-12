@@ -13,7 +13,8 @@ from orm.archery.base import Base
 class NotableWinsWithRanks(Base):
     __tablename__ = "singles_notable_wins"  # Change to your target table name
 
-    tournament_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    tournament_id = Column(Integer)
     tournament_name = Column(String(255))
     tournament_grade = Column(String(50))
     round_name = Column(String(100))
@@ -21,8 +22,8 @@ class NotableWinsWithRanks(Base):
     athlete_name = Column(String(255))
     opponent_id = Column(Integer)
     opponent_name = Column(String(255))
-    win_flag = Column(Integer)  # 0 or 1
+    win_flag = Column(String(50)) # 0 or 1
     start_date = Column(Date)
     year = Column(Integer)
-    athlete_world_ranking = Column(Float)
-    opponent_world_ranking = Column(Float)
+    athlete_world_ranking = Column(String(50))
+    opponent_world_ranking = Column(String(50))

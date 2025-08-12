@@ -194,158 +194,158 @@ def process_tournament_grade():
     return tournament_data
 
 
-def add_win_flag_and_names(df):
-    """
-    Adds win_flag, athlete_name, opponent_name, and opponent_id columns
-    based on athlete_id, team IDs, and winner info.
-    """
-    df = df.copy()
-
-    def process_row(row):
-        if row['athlete_id'] == row['team_1_player_1_id']:
-            return pd.Series([
-                1 if row.get('winner') == 1 else 0,
-                row['team_1_player_1_name'],
-                row['team_2_player_1_name'],
-                row['team_2_player_1_id']
-            ])
-        elif row['athlete_id'] == row['team_2_player_1_id']:
-            return pd.Series([
-                1 if row.get('winner') == 2 else 0,
-                row['team_2_player_1_name'],
-                row['team_1_player_1_name'],
-                row['team_1_player_1_id']
-            ])
-        else:
-            return pd.Series([None, None, None, None])
-
-    df[['win_flag', 'athlete_name', 'opponent_name', 'opponent_id']] = df.apply(process_row, axis=1)
-
-    return df
-
-
-def prepare_final_match_df(df):
-    """
-    Cleans and reorders match dataframe:
-    - Drops unnecessary columns
-    - Ensures start_date is datetime
-    - Adds week_number and year
-    - Reorders columns to final order
-    """
-    df = df.copy()
-
-    # Ensure start_date is datetime
-    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
-
-    # Add week number & year
-    df['week_number'] = df['start_date'].dt.isocalendar().week
-    df['year'] = df['start_date'].dt.year
-
-    # Drop unwanted columns
-    drop_cols = [
-        'tournament_match_id', 'draw_name_full', 'winner',
-        'team_1_player_1_id', 'team_1_player_1_name',
-        'team_2_player_1_id', 'team_2_player_1_name',
-        'date', 'end_date'
-    ]
-    df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True, errors='ignore')
-
-    # Final column order
-    final_order = [
-        'tournament_id', 'tournament_name', 'tournament_grade',
-        'round_name', 'athlete_id', 'athlete_name',
-        'opponent_id', 'opponent_name', 'win_flag',
-        'start_date', 'week_number', 'year'
-    ]
-    df = df[[col for col in final_order if col in df.columns]]
-
-    return df
-
-
-def add_week_year_columns(df):
-    """
-    Convert 'date' column to datetime and add ISO week number and year columns.
-
-    Parameters:
-        df (pd.DataFrame): DataFrame with at least a 'date' column.
-
-    Returns:
-        pd.DataFrame: Updated DataFrame with 'week_number' and 'year' columns.
-    """
-    # Ensure date column is datetime
-    df['date'] = pd.to_datetime(df['date'], errors='coerce')
-
-    # Add ISO week number
-    df['week_number'] = df['date'].dt.isocalendar().week
-
-    # Add year
-    df['year'] = df['date'].dt.year
-
-    return df
-
-
-
-
-
-def attach_ranks_without_merge_asof(df, data_rank):
-    """
-    Attach 'world_ranking' to matches for both athlete and opponent
-    as of the match start_date, without using pandas.merge_asof.
-
-    Parameters:
-        df (pd.DataFrame): Match data with 'athlete_id', 'opponent_id', 'start_date'.
-        data_rank (pd.DataFrame): Ranking data with 'athlete_id', 'date', 'world_ranking'.
-
-    Returns:
-        pd.DataFrame: Original df with two new columns:
-                      'athlete_world_ranking' and 'opponent_world_ranking'.
-    """
-
-    df = df.copy()
-    ranks = data_rank.copy()
-
-    # --- Normalize types ---
-    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
-    ranks['date'] = pd.to_datetime(ranks['date'], errors='coerce')
-
-    df['athlete_id'] = df['athlete_id'].astype(str)
-    df['opponent_id'] = df['opponent_id'].astype(str)
-    ranks['athlete_id'] = ranks['athlete_id'].astype(str)
-
-    # --- Prepare ranks: one row per (athlete_id, date), sorted by date ---
-    ranks = (
-        ranks[['athlete_id', 'date', 'world_ranking']]
-        .dropna(subset=['athlete_id', 'date'])
-        .drop_duplicates(subset=['athlete_id', 'date'], keep='last')
-        .sort_values(['athlete_id', 'date'], kind='mergesort')
-        .reset_index(drop=True)
-    )
-
-    # Pre-split ranks into arrays per athlete for fast lookup
-    ranks_by_id = {
-        aid: (g['date'].to_numpy(), g['world_ranking'].to_numpy())
-        for aid, g in ranks.groupby('athlete_id', sort=False)
-    }
-
-    def asof_lookup(ids: pd.Series, dates: pd.Series, right_map):
-        out = np.full(len(ids), np.nan, dtype='float64')
-        for k, idx in ids.groupby(ids, sort=False).groups.items():
-            rd = right_map.get(k)
-            if rd is None:
-                continue
-            r_dates, r_vals = rd
-            pos = np.searchsorted(r_dates, dates.iloc[idx].to_numpy(), side='right') - 1
-            valid = pos >= 0
-            if np.any(valid):
-                out_idx = np.asarray(list(idx))[valid]
-                out[out_idx] = r_vals[pos[valid]]
-        return pd.Series(out, index=ids.index)
-
-    # Attach rankings for athlete and opponent
-    df['athlete_world_ranking'] = asof_lookup(df['athlete_id'], df['start_date'], ranks_by_id)
-    df['opponent_world_ranking'] = asof_lookup(df['opponent_id'], df['start_date'], ranks_by_id)
-
-    return df
+# def add_win_flag_and_names(df):
+#     """
+#     Adds win_flag, athlete_name, opponent_name, and opponent_id columns
+#     based on athlete_id, team IDs, and winner info.
+#     """
+#     df = df.copy()
+#
+#     def process_row(row):
+#         if row['athlete_id'] == row['team_1_player_1_id']:
+#             return pd.Series([
+#                 1 if row.get('winner') == 1 else 0,
+#                 row['team_1_player_1_name'],
+#                 row['team_2_player_1_name'],
+#                 row['team_2_player_1_id']
+#             ])
+#         elif row['athlete_id'] == row['team_2_player_1_id']:
+#             return pd.Series([
+#                 1 if row.get('winner') == 2 else 0,
+#                 row['team_2_player_1_name'],
+#                 row['team_1_player_1_name'],
+#                 row['team_1_player_1_id']
+#             ])
+#         else:
+#             return pd.Series([None, None, None, None])
+#
+#     df[['win_flag', 'athlete_name', 'opponent_name', 'opponent_id']] = df.apply(process_row, axis=1)
+#
+#     return df
+#
+#
+# def prepare_final_match_df(df):
+#     """
+#     Cleans and reorders match dataframe:
+#     - Drops unnecessary columns
+#     - Ensures start_date is datetime
+#     - Adds week_number and year
+#     - Reorders columns to final order
+#     """
+#     df = df.copy()
+#
+#     # Ensure start_date is datetime
+#     df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
+#
+#     # Add week number & year
+#     df['week_number'] = df['start_date'].dt.isocalendar().week
+#     df['year'] = df['start_date'].dt.year
+#
+#     # Drop unwanted columns
+#     drop_cols = [
+#         'tournament_match_id', 'draw_name_full', 'winner',
+#         'team_1_player_1_id', 'team_1_player_1_name',
+#         'team_2_player_1_id', 'team_2_player_1_name',
+#         'date', 'end_date'
+#     ]
+#     df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True, errors='ignore')
+#
+#     # Final column order
+#     final_order = [
+#         'tournament_id', 'tournament_name', 'tournament_grade',
+#         'round_name', 'athlete_id', 'athlete_name',
+#         'opponent_id', 'opponent_name', 'win_flag',
+#         'start_date', 'week_number', 'year'
+#     ]
+#     df = df[[col for col in final_order if col in df.columns]]
+#
+#     return df
+#
+#
+# def add_week_year_columns(df):
+#     """
+#     Convert 'date' column to datetime and add ISO week number and year columns.
+#
+#     Parameters:
+#         df (pd.DataFrame): DataFrame with at least a 'date' column.
+#
+#     Returns:
+#         pd.DataFrame: Updated DataFrame with 'week_number' and 'year' columns.
+#     """
+#     # Ensure date column is datetime
+#     df['date'] = pd.to_datetime(df['date'], errors='coerce')
+#
+#     # Add ISO week number
+#     df['week_number'] = df['date'].dt.isocalendar().week
+#
+#     # Add year
+#     df['year'] = df['date'].dt.year
+#
+#     return df
+#
+#
+#
+#
+#
+# def attach_ranks_without_merge_asof(df, data_rank):
+#     """
+#     Attach 'world_ranking' to matches for both athlete and opponent
+#     as of the match start_date, without using pandas.merge_asof.
+#
+#     Parameters:
+#         df (pd.DataFrame): Match data with 'athlete_id', 'opponent_id', 'start_date'.
+#         data_rank (pd.DataFrame): Ranking data with 'athlete_id', 'date', 'world_ranking'.
+#
+#     Returns:
+#         pd.DataFrame: Original df with two new columns:
+#                       'athlete_world_ranking' and 'opponent_world_ranking'.
+#     """
+#
+#     df = df.copy()
+#     ranks = data_rank.copy()
+#
+#     # --- Normalize types ---
+#     df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
+#     ranks['date'] = pd.to_datetime(ranks['date'], errors='coerce')
+#
+#     df['athlete_id'] = df['athlete_id'].astype(str)
+#     df['opponent_id'] = df['opponent_id'].astype(str)
+#     ranks['athlete_id'] = ranks['athlete_id'].astype(str)
+#
+#     # --- Prepare ranks: one row per (athlete_id, date), sorted by date ---
+#     ranks = (
+#         ranks[['athlete_id', 'date', 'world_ranking']]
+#         .dropna(subset=['athlete_id', 'date'])
+#         .drop_duplicates(subset=['athlete_id', 'date'], keep='last')
+#         .sort_values(['athlete_id', 'date'], kind='mergesort')
+#         .reset_index(drop=True)
+#     )
+#
+#     # Pre-split ranks into arrays per athlete for fast lookup
+#     ranks_by_id = {
+#         aid: (g['date'].to_numpy(), g['world_ranking'].to_numpy())
+#         for aid, g in ranks.groupby('athlete_id', sort=False)
+#     }
+#
+#     def asof_lookup(ids: pd.Series, dates: pd.Series, right_map):
+#         out = np.full(len(ids), np.nan, dtype='float64')
+#         for k, idx in ids.groupby(ids, sort=False).groups.items():
+#             rd = right_map.get(k)
+#             if rd is None:
+#                 continue
+#             r_dates, r_vals = rd
+#             pos = np.searchsorted(r_dates, dates.iloc[idx].to_numpy(), side='right') - 1
+#             valid = pos >= 0
+#             if np.any(valid):
+#                 out_idx = np.asarray(list(idx))[valid]
+#                 out[out_idx] = r_vals[pos[valid]]
+#         return pd.Series(out, index=ids.index)
+#
+#     # Attach rankings for athlete and opponent
+#     df['athlete_world_ranking'] = asof_lookup(df['athlete_id'], df['start_date'], ranks_by_id)
+#     df['opponent_world_ranking'] = asof_lookup(df['opponent_id'], df['start_date'], ranks_by_id)
+#
+#     return df
 
 def build_notable_wins_with_ranks():
     """
@@ -475,9 +475,150 @@ def process_doubles_tournament_finishes():
 
 
 
+'''
+Notable wins
+'''
 
 
+# ----------------------------
+# Step 1: Add win_flag and names
+# ----------------------------
+def add_win_flag_and_names(df):
+    def process_row(row):
+        if row['athlete_id'] == row['team_1_player_1_id']:
+            return pd.Series([
+                'Won' if row.get('winner') == 1 else 'Lost',
+                row['team_1_player_1_name'],
+                row['team_2_player_1_name'],
+                row['team_2_player_1_id']
+            ])
+        elif row['athlete_id'] == row['team_2_player_1_id']:
+            return pd.Series([
+                'Won' if row.get('winner') == 2 else 'Lost',
+                row['team_2_player_1_name'],
+                row['team_1_player_1_name'],
+                row['team_1_player_1_id']
+            ])
+        else:
+            return pd.Series([None, None, None, None])
 
+    df[['win_flag', 'athlete_name', 'opponent_name', 'opponent_id']] = df.apply(process_row, axis=1)
+    return df
+
+
+# ----------------------------
+# Step 2: Drop unnecessary columns and reorder
+# ----------------------------
+def clean_and_reorder_columns(df):
+    drop_cols = [
+        'tournament_match_id', 'draw_name_full', 'winner',
+        'team_1_player_1_id', 'team_1_player_1_name',
+        'team_2_player_1_id', 'team_2_player_1_name',
+        'date', 'year'
+    ]
+    df = df.drop(columns=[col for col in drop_cols if col in df.columns], errors='ignore')
+
+    final_order = [
+        'tournament_id', 'tournament_name', 'tournament_grade',
+        'round_name', 'athlete_id', 'athlete_name',
+        'opponent_id', 'opponent_name', 'win_flag',
+        'start_date'
+    ]
+    return df[final_order]
+
+
+# ----------------------------
+# Step 3: Add week_number and year from a date column
+# ----------------------------
+def add_date_features(df, date_col='start_date'):
+    df = df.copy()
+    df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+    df['week_number'] = df[date_col].dt.isocalendar().week
+    df['year'] = df[date_col].dt.year
+    return df
+
+
+# ----------------------------
+# Step 4: Attach rankings without merge_asof
+# ----------------------------
+def attach_ranks_without_merge_asof(df, data_rank):
+    df = df.copy()
+    ranks = data_rank.copy()
+
+    # Normalize dates
+    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
+    ranks['date'] = pd.to_datetime(ranks['date'], errors='coerce')
+
+    # Normalize IDs to integer
+    df['athlete_id'] = pd.to_numeric(df['athlete_id'], errors='coerce').astype('Int64')
+    df['opponent_id'] = pd.to_numeric(df['opponent_id'], errors='coerce').astype('Int64')
+    ranks['athlete_id'] = pd.to_numeric(ranks['athlete_id'], errors='coerce').astype('Int64')
+
+    # Prepare ranks: one row per (athlete_id, date), sorted by date
+    ranks = (
+        ranks[['athlete_id', 'date', 'world_ranking']]
+        .dropna(subset=['athlete_id', 'date'])
+        .drop_duplicates(subset=['athlete_id', 'date'], keep='last')
+        .sort_values(['athlete_id', 'date'], kind='mergesort')
+        .reset_index(drop=True)
+    )
+
+    # Ensure rankings are integers where possible
+    ranks['world_ranking'] = pd.to_numeric(ranks['world_ranking'], errors='coerce').astype('Int64')
+
+    # Pre-split ranks into arrays per athlete for fast lookup
+    ranks_by_id = {
+        int(aid): (g['date'].to_numpy(), g['world_ranking'].to_numpy(dtype='int64'))
+        for aid, g in ranks.groupby('athlete_id', sort=False)
+    }
+
+    def asof_lookup(ids: pd.Series, dates: pd.Series, right_map, out_name: str):
+        out = np.full(len(ids), np.nan, dtype='float64')
+        for k, idx in ids.groupby(ids, sort=False).groups.items():
+            if pd.isna(k):
+                continue
+            rd = right_map.get(int(k))
+            if rd is None:
+                continue
+            r_dates, r_vals = rd
+            pos = np.searchsorted(r_dates, dates.iloc[idx].to_numpy(), side='right') - 1
+            valid = pos >= 0
+            if np.any(valid):
+                out_idx = np.asarray(list(idx))[valid]
+                out[out_idx] = r_vals[pos[valid]]
+        # Convert to nullable integer type (keeps NaN support but shows int)
+        return pd.Series(pd.Series(out).astype('Int64'), index=ids.index, name=out_name)
+
+    # Attach athlete and opponent world ranking
+    df['athlete_world_ranking'] = asof_lookup(df['athlete_id'], df['start_date'], ranks_by_id, 'athlete_world_ranking')
+    df['opponent_world_ranking'] = asof_lookup(df['opponent_id'], df['start_date'], ranks_by_id, 'opponent_world_ranking')
+
+    return df
+
+# ----------------------------
+# Step 5: Pipeline Execution
+# ----------------------------
+def process_tournament_data():
+    data = pd.read_sql_query(read_singles_notable_wins(), con=sai_db_engine)
+    data_rank = pd.read_sql_query(read_singles_ranking_table(), con=sai_db_engine)
+
+    df = add_win_flag_and_names(data)
+    df = clean_and_reorder_columns(df)
+    df = add_date_features(df, date_col='start_date')
+
+    # Ensure data_rank dates are parsed
+    data_rank = data_rank.copy()
+    data_rank['date'] = pd.to_datetime(data_rank['date'], errors='coerce')
+
+    df = attach_ranks_without_merge_asof(df, data_rank)
+
+    final_cols = [
+        'tournament_id', 'tournament_name', 'tournament_grade', 'round_name',
+        'athlete_id', 'athlete_name', 'opponent_id', 'opponent_name',
+        'win_flag', 'start_date','year',
+        'athlete_world_ranking', 'opponent_world_ranking'
+    ]
+    return df[final_cols]
 
 
 

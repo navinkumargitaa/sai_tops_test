@@ -213,28 +213,37 @@ def read_singles_notable_wins():
     """
     query = """
     SELECT DISTINCT 
-      a.athlete_id,
-      a.tournament_id,
-      a.tournament_match_id,
-      a.round_name,
-      a.draw_name_full,
-      a.winner,
-      a.team_1_player_1_id,
-      a.team_1_player_1_name,
-      a.team_2_player_1_id,
-      a.team_2_player_1_name,
-      b.tournament_name AS tournament_name,
-      b.new_grade AS tournament_grade,
-      b.start_date as start_date,
-      b.year as year
-        FROM sai_badminton_final.badminton_athlete_match a
-        JOIN sai_badminton_final.badminton_tournament_details_viz b
+    a.athlete_id,
+    a.tournament_id,
+    a.tournament_match_id,
+    a.round_name,
+    a.draw_name_full,
+    a.winner,
+    a.team_1_player_1_id,
+    a.team_1_player_1_name,
+    a.team_2_player_1_id,
+    a.team_2_player_1_name,
+    b.tournament_name AS tournament_name,
+    b.new_grade AS tournament_grade,
+    b.start_date AS start_date,
+    b.year AS year
+    FROM sai_badminton_final.badminton_athlete_match a
+    JOIN sai_badminton_final.badminton_tournament_details_viz b
         ON a.tournament_id = b.tournament_id
-        where a.athlete_id in (
-            83950, 68870, 73173, 69093, 59687, 74481, 58664, 68322, 
-            99042, 91807, 97168, 70595, 82572)
-        and b.year>2020
-        order by a.tournament_id,a.tournament_match_id;
+    WHERE a.athlete_id IN (
+        83950, 68870, 73173, 69093, 59687, 74481, 58664, 68322, 
+        99042, 91807, 97168, 70595, 82572
+    )
+    AND b.year > 2020
+    AND a.draw_name_full NOT IN (
+        'Mixed Team - Final Stage 1 TO 8 - 1st''s MONRAD',
+        'BD U17 ELIMINATION',
+        'MD - Qualification',
+        'WOMEN''S DOUBLES ELIMINATION',
+        'WD - Qualification',
+        'WOMEN''S DOUBLES ROUND ROBIN'
+    )
+    ORDER BY a.tournament_id, a.tournament_match_id;
     
     """
     return query

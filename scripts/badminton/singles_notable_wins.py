@@ -19,7 +19,7 @@ from orm.badminton.singles_notable_wins import NotableWinsWithRanks,Base
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import build_notable_wins_with_ranks
+from services.badminton.analysis import build_notable_wins_with_ranks,process_tournament_data
 
 def main():
     """
@@ -38,7 +38,7 @@ def main():
     print("Table creation attempted.")
 
     # Step 2: Extract and transform ranking data
-    notable_wins_singles = build_notable_wins_with_ranks()
+    notable_wins_singles = process_tournament_data()
     print("✅ Data extracted and transformed:")
 
 
@@ -57,16 +57,17 @@ def main():
                 tournament_name=row["tournament_name"],
                 tournament_grade=row["tournament_grade"],
                 round_name=row["round_name"],
-                athlete_id=int(row["athlete_id"]),
+                athlete_id=None if pd.isna(row["athlete_id"]) else int(row["athlete_id"]),
                 athlete_name=row["athlete_name"],
-                opponent_id=int(row["opponent_id"]),
+                opponent_id=None if pd.isna(row["opponent_id"]) else int(row["opponent_id"]),
                 opponent_name=row["opponent_name"],
-                win_flag=int(row["win_flag"]),
+                win_flag=row["win_flag"],
                 start_date=row["start_date"],
-                end_date=row["end_date"],
                 year=int(row["year"]),
-                athlete_world_ranking=float(row["athlete_world_ranking"]),
-                opponent_world_ranking=float(row["opponent_world_ranking"])
+                athlete_world_ranking=None if pd.isna(row["athlete_world_ranking"]) else int(
+                    row["athlete_world_ranking"]),
+                opponent_world_ranking=None if pd.isna(row["opponent_world_ranking"]) else int(
+                    row["opponent_world_ranking"])
             )
             for _, row in notable_wins_singles.iterrows()
         ]
