@@ -626,6 +626,56 @@ def process_doubles_notable_wins():
     ]
     return df[final_cols]
 
+import pandas as pd
+import numpy as np
+
+def build_notable_wins_doubles_final_table(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Expects columns:
+    ['tournament_id','tournament_name','tournament_grade','round_name',
+     'athlete_team_name','athlete_team_id','opponent_team_name','opponent_team_id',
+     'win_flag','start_date','week_number','year','athlete_team_id_rank','opponent_team_id_rank']
+    Returns a DataFrame with:
+    ['tournament_id','tournament_name','tournament_grade','round_name',
+     'athlete_team_name','notabele_win','lost_to']
+    """
+
+    # Robust booleans for win_flag (handles 1/0, True/False, 'W'/'L', 'win'/'loss')
+    win_str = df['win_flag'].astype(str).str.strip().str.lower()
+    win = win_str.isin({'1','true','t','w','win','won','y','yes'})
+
+    # Ensure ranks are numeric for comparison
+    a_rank = pd.to_numeric(df['athlete_team_id_rank'], errors='coerce')
+    o_rank = pd.to_numeric(df['opponent_team_id_rank'], errors='coerce')
+
+    # Opponent display like "J Christie (2)"
+    # If rank is missing, show just the name
+    opp_rank_str = np.where(o_rank.notna(), o_rank.astype('Int64').astype(str), None)
+    opponent_display = np.where(opp_rank_str == None,
+                                df['opponent_team_name'].fillna(''),
+                                df['opponent_team_name'].fillna('') + ' (' + opp_rank_str + ')')
+
+    # Notable win = athlete won AND athlete rank < opponent rank
+    notable_mask = win & (a_rank < o_rank)
+
+    notabele_win = np.where(notable_mask, opponent_display, '-')
+
+    # lost_to = opponent name (with rank) if athlete lost; else "won"
+    lost_to = np.where(win, 'won', opponent_display)
+
+    out = pd.DataFrame({
+        'tournament_id': df['tournament_id'],
+        'tournament_name': df['tournament_name'],
+        'tournament_grade': df['tournament_grade'],
+        'round_name': df['round_name'],
+        'athlete_team_name': df['athlete_team_name'],
+        'notabele_win': notabele_win,
+        'lost_to': lost_to
+    })
+
+    return out
+
+
 
 
 

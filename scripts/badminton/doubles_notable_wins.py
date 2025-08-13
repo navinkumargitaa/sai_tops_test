@@ -19,7 +19,7 @@ from orm.badminton.doubles_notable_wins import DoublesNotableWinsWithRanks,Base
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_doubles_notable_wins
+from services.badminton.analysis import process_doubles_notable_wins,build_notable_wins_doubles_final_table
 
 def main():
     """
@@ -40,6 +40,8 @@ def main():
     # Step 2: Extract and transform ranking data
     notable_wins_doubles = process_doubles_notable_wins()
     print("✅ Data extracted and transformed:")
+
+    new_df = build_notable_wins_doubles_final_table(notable_wins_doubles)
 
 
     # Step 3: Initialize the database session
