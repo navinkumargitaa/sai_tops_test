@@ -266,7 +266,12 @@ def read_doubles_notable_wins():
             ON t2.player_min = LEAST(c.team_2_player_1_id, c.team_2_player_2_id)
            AND t2.player_max = GREATEST(c.team_2_player_1_id, c.team_2_player_2_id)
         WHERE c.athlete_id IN (72435,71612,69560,57372)
-          AND d.year > 2020;
+          AND d.year > 2020
+          AND c.draw_name_full IN (
+                'MEN''S DOUBLES ELIMINATION',
+                'WOMEN''S DOUBLES ELIMINATION',
+                'MIXED DOUBLES ELIMINATION'
+          );
     """
     return query
 

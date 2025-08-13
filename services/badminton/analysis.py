@@ -17,6 +17,7 @@ from model.badminton.database import SessionLocal
 from model.badminton.database import read_singles_ranking_progression,read_doubles_ranking_progression,sai_db_engine
 from model.badminton.database import read_all_tournament_details,read_singles_notable_wins,read_singles_ranking_table
 from model.badminton.database import read_singles_tournament_finishes,read_doubles_tournament_finishes
+from model.badminton.database import read_doubles_notable_wins,read_doubles_ranking_table
 
 
 
@@ -197,26 +198,6 @@ def process_tournament_grade():
 """
 Below is the scripts for tournament finishes
 """
-
-def read_singles_tournament_finishes_data(main_data, filter_data):
-    """
-
-    :return:
-    """
-    query = read_singles_tournament_finishes()
-    df = pd.read_sql_query(query,con=sai_db_engine)
-    doubles_filtered = pd.read_csv('/home/navin/Desktop/SAI/sai_tops_testing/data/badminton/singles_category_filtered.csv')
-    return df.merge(doubles_filtered, on=["athlete_id", "category"], how="inner")
-
-def read_doubles_tournament_finishes_data(main_data, filter_data):
-    """
-
-    :return:
-    """
-    query = read_doubles_tournament_finishes()
-    df = pd.read_sql_query(query,con=sai_db_engine)
-    doubles_filtered = pd.read_csv('/home/navin/Desktop/SAI/sai_tops_testing/data/badminton/doubles_category_filtered.csv')
-    return df.merge(doubles_filtered, on=["athlete_id", "category"], how="inner")
 
 
 def clean_and_transform_data(data):
@@ -435,6 +416,215 @@ def process_singles_notable_wins():
     ]
     return df[final_cols]
 
+"""
+Doubles Notable wins
+"""
+
+
+def add_doubles_win_flag_and_team_names(df):
+    # Allowed athlete pairs (order doesn't matter)
+    allowed_pairs = {
+        frozenset((72435, 70500)),  # Satwiksairaj & Chirag
+        frozenset((71612, 59966)),  # Treesa & Gayatri
+        frozenset((69560, 98187)),  # Hariharan & Ruban
+        frozenset((57372, 94165))  # Dhruv & Tanisha
+    }
+
+    def process_row(row):
+        team1_pair = frozenset((row['team_1_player_1_id'], row['team_1_player_2_id']))
+        team2_pair = frozenset((row['team_2_player_1_id'], row['team_2_player_2_id']))
+
+        # Only restrict athlete's team name
+        team1_name = f"{row['team_1_player_1_name']} & {row['team_1_player_2_name']}" if team1_pair in allowed_pairs else None
+        team2_name = f"{row['team_2_player_1_name']} & {row['team_2_player_2_name']}" if team2_pair in allowed_pairs else None
+
+        # Opponent names always visible
+        team1_name_full = f"{row['team_1_player_1_name']} & {row['team_1_player_2_name']}"
+        team2_name_full = f"{row['team_2_player_1_name']} & {row['team_2_player_2_name']}"
+
+        if row['athlete_id'] in (row['team_1_player_1_id'], row['team_1_player_2_id']):
+            return pd.Series([
+                'Won' if row['winner'] == 1 else 'Lost',
+                team1_name,
+                row['team_1_id'] if team1_pair in allowed_pairs else None,
+                team2_name_full,
+                row['team_2_id']
+            ])
+        elif row['athlete_id'] in (row['team_2_player_1_id'], row['team_2_player_2_id']):
+            return pd.Series([
+                'Won' if row['winner'] == 2 else 'Lost',
+                team2_name,
+                row['team_2_id'] if team2_pair in allowed_pairs else None,
+                team1_name_full,
+                row['team_1_id']
+            ])
+        else:
+            return pd.Series([None, None, None, None, None])
+
+    df[['win_flag', 'athlete_team_name', 'athlete_team_id',
+        'opponent_team_name', 'opponent_team_id']] = df.apply(process_row, axis=1)
+
+    # Drop rows where athlete_team_id is missing
+    df = df.dropna(subset=['athlete_team_id'])
+    # Keep only required columns
+    final_cols = [
+        'athlete_id', 'tournament_id', 'tournament_name', 'tournament_grade',
+        'round_name', 'athlete_team_name', 'athlete_team_id',
+        'opponent_team_name', 'opponent_team_id', 'win_flag',
+        'start_date'
+    ]
+    return df[final_cols]
+
+def add_doubles_date_features(df, date_col='start_date'):
+    df = df.copy()
+    df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+    df['week_number'] = df[date_col].dt.isocalendar().week
+    df['year'] = df[date_col].dt.year
+    return df
+
+
+# ---------- Helpers ----------
+def _coerce_dates_and_ids(df: pd.DataFrame, ranks: pd.DataFrame, normalize_to_day: bool = True):
+    """
+    - Parses dates
+    - Optionally normalizes to calendar-day (so equality on the same day counts)
+    - Aligns team-id dtypes to nullable Int64
+    """
+    df = df.copy()
+    ranks = ranks.copy()
+
+    # Parse to datetime
+    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
+    ranks['date']    = pd.to_datetime(ranks['date'], errors='coerce')
+
+    # Normalize to day to ensure 2024-06-11 15:00 == 2024-06-11 00:00
+    if normalize_to_day:
+        # drop timezone if present, then normalize to midnight
+        df['start_date'] = df['start_date'].dt.tz_localize(None).dt.normalize()
+        ranks['date']    = ranks['date'].dt.tz_localize(None).dt.normalize()
+    else:
+        # just drop timezone if present, keep time-of-day
+        if getattr(df['start_date'].dt, 'tz', None) is not None:
+            df['start_date'] = df['start_date'].dt.tz_localize(None)
+        if getattr(ranks['date'].dt, 'tz', None) is not None:
+            ranks['date'] = ranks['date'].dt.tz_localize(None)
+
+    # IDs -> nullable Int64 (handles strings/floats/ints; keeps NaN)
+    to_int64 = lambda s: pd.to_numeric(s, errors='coerce').astype('Int64')
+    df['athlete_team_id']  = to_int64(df.get('athlete_team_id'))
+    df['opponent_team_id'] = to_int64(df.get('opponent_team_id'))
+    ranks['team_id']       = to_int64(ranks.get('team_id'))
+
+    return df, ranks
+
+def _latest_rank_on_or_before(df_ids: pd.Series,
+                              df_dates: pd.Series,
+                              ranks_team: pd.DataFrame) -> pd.Series:
+    """
+    For a single role (athlete/opponent):
+    - df_ids: team ids from df (Int64)
+    - df_dates: start_date from df (datetime64[ns])
+    - ranks_team: DataFrame with columns ['team_id','date','world_ranking']
+    Returns a Series aligned to df with the most recent world_ranking where rank_date <= start_date.
+    """
+    out = pd.Series(index=df_ids.index, dtype='float64')  # keep float to allow NaN
+
+    # Clean and sort ranks by team, then date (stable)
+    ranks_team = (
+        ranks_team.dropna(subset=['team_id', 'date'])
+                  .sort_values(['team_id', 'date'], kind='mergesort')
+    )
+
+    # Process each team present in df (vectorized by team groups)
+    for team, idx in df_ids.dropna().groupby(df_ids).groups.items():
+        # Slice this team's ranking timeline
+        r = ranks_team.loc[ranks_team['team_id'] == team, ['date', 'world_ranking']]
+        if r.empty:
+            continue
+
+        dates = r['date'].to_numpy()
+        vals  = r['world_ranking'].to_numpy()
+
+        # Tournament dates for these rows
+        td = df_dates.loc[idx].to_numpy()
+
+        # Index of last rank date <= start_date (exact matches included)
+        pos = np.searchsorted(dates, td, side='right') - 1
+
+        # Assign only where a prior/same-day snapshot exists
+        result = np.full(td.shape, np.nan, dtype='float64')
+        valid = pos >= 0
+        result[valid] = vals[pos[valid]]
+
+        out.loc[idx] = result
+
+    return out
+
+
+def attach_team_ranks_without_asof(df: pd.DataFrame, ranks: pd.DataFrame, normalize_to_day: bool = True) -> pd.DataFrame:
+    """
+    Adds:
+      - athlete_team_id_rank
+      - opponent_team_id_rank
+    computed as the latest available 'world_ranking' from 'ranks'
+    on or before each row's 'start_date'. If start_date == rank date, it's used.
+    """
+    df2, ranks2 = _coerce_dates_and_ids(df, ranks, normalize_to_day=normalize_to_day)
+
+    # Athlete
+    df2['athlete_team_id_rank'] = _latest_rank_on_or_before(
+        df2['athlete_team_id'],
+        df2['start_date'],
+        ranks2[['team_id', 'date', 'world_ranking']]
+    )
+
+    # Opponent
+    df2['opponent_team_id_rank'] = _latest_rank_on_or_before(
+        df2['opponent_team_id'],
+        df2['start_date'],
+        ranks2[['team_id', 'date,', 'world_ranking']].rename(columns={'date,': 'date'})  # safety if a stray comma sneaks in
+        if 'date,' in ranks2.columns else ranks2[['team_id', 'date', 'world_ranking']]
+    )
+
+    return df2
+
+
+# ----------------------------
+# Step 5: Pipeline Execution
+# ----------------------------
+def process_doubles_notable_wins():
+    data = pd.read_sql_query(read_doubles_notable_wins(), con=sai_db_engine)
+    data_rank = pd.read_sql_query(read_doubles_ranking_table(), con=sai_db_engine)
+
+    df = add_doubles_win_flag_and_team_names(data)
+    df = add_doubles_date_features(df, date_col='start_date')
+
+    # Ensure data_rank dates are parsed
+    data_rank = data_rank.copy()
+    data_rank['date'] = pd.to_datetime(data_rank['date'], errors='coerce')
+
+    df = attach_team_ranks_without_asof(df, data_rank)
+    # Convert rank columns to integers (set NaN to None)
+    for col in ['athlete_team_id_rank', 'opponent_team_id_rank']:
+        df[col] = df[col].apply(lambda x: None if pd.isna(x) else int(x))
+
+    final_cols = [
+        'tournament_id',
+        'tournament_name',
+        'tournament_grade',
+        'round_name',
+        'athlete_team_name',
+        'athlete_team_id',
+        'opponent_team_name',
+        'opponent_team_id',
+        'win_flag',
+        'start_date',
+        'week_number',
+        'year',
+        'athlete_team_id_rank',
+        'opponent_team_id_rank'
+    ]
+    return df[final_cols]
 
 
 
