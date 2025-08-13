@@ -10,7 +10,7 @@ from orm.archery.base import Base
 
 
 class BadmintonSinglesTournamentFinishes(Base):
-    __tablename__ = "badminton_singles_tournament_finishes_viz"
+    __tablename__ = "z_badminton_singles_tournament_finishes_viz"
 
     # Index columns
     athlete_id = Column(Integer, primary_key=True)

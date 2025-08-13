@@ -19,7 +19,7 @@ from orm.badminton.singles_notable_wins import NotableWinsWithRanks,Base
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import build_notable_wins_with_ranks,process_tournament_data
+from services.badminton.analysis import process_singles_notable_wins
 
 def main():
     """
@@ -38,7 +38,7 @@ def main():
     print("Table creation attempted.")
 
     # Step 2: Extract and transform ranking data
-    notable_wins_singles = process_tournament_data()
+    notable_wins_singles = process_singles_notable_wins()
     print("✅ Data extracted and transformed:")
 
 

@@ -64,8 +64,8 @@ def read_singles_ranking_progression() -> str:
             a.world_tour_ranking AS world_tour_ranking,
             a.olympics AS olympic_rank,
             a.ranking_category_id AS ranking_id
-        FROM sai_badminton_viz_final.badminton_ranking_graph_ind a
-        JOIN sai_badminton_viz_final.badminton_athlete b
+        FROM sai_badminton_final.badminton_ranking_graph_ind a
+        JOIN sai_badminton_final.badminton_athlete b
             ON a.athlete_id = b.athlete_id
         WHERE a.athlete_id IN ({athlete_ids_str})
           AND a.ranking_category_id IN ({ranking_ids_str})
@@ -95,12 +95,12 @@ def read_doubles_ranking_progression() -> str:
             CONCAT(b.athlete_1_id, '-', b.athlete_2_id) AS composite_team_id,
             CONCAT(a1.display_name, ' & ', a2.display_name) AS team_display_name
         
-        FROM sai_badminton_viz_final.badminton_team b
-        JOIN sai_badminton_viz_final.badminton_ranking_graph_team a 
+        FROM sai_badminton_final.badminton_team b
+        JOIN sai_badminton_final.badminton_ranking_graph_team a 
             ON a.team_id = b.row_id
-        LEFT JOIN sai_badminton_viz_final.badminton_athlete a1 
+        LEFT JOIN sai_badminton_final.badminton_athlete a1 
             ON b.athlete_1_id = a1.athlete_id
-        LEFT JOIN sai_badminton_viz_final.badminton_athlete a2 
+        LEFT JOIN sai_badminton_final.badminton_athlete a2 
             ON b.athlete_2_id = a2.athlete_id
         WHERE {DOUBLES_CONDITIONS};
     """
@@ -117,33 +117,6 @@ def read_all_tournament_details():
 
     return query
 
-def read_singles_tournament_finishes_old() -> pd.DataFrame:
-    """
-    Fetch tournament finish data for selected singles athletes.
-
-    :return: DataFrame with tournament results
-    """
-    athlete_ids_str = ", ".join(map(str, SINGLES_ATHLETE_IDS))
-
-    query = f"""
-        SELECT DISTINCT 
-            a.tournament_id AS tournament_id,
-            b.name AS tournament_name,
-            b.grade AS tournament_grade,
-            b.date AS tournament_date,
-            b.year AS tournament_year,
-            a.athlete_id AS athlete_id,
-            a.name AS category,
-            a.position AS final_position
-        FROM sai_badminton_viz_final.badminton_athlete_tournament_draw a
-        INNER JOIN sai_badminton_viz_final.badminton_athlete_tournament b
-            ON a.tournament_id = b.tournament_id 
-            AND a.athlete_id = b.athlete_id
-        WHERE a.athlete_id IN ({athlete_ids_str})
-        ORDER BY tournament_date;
-    """
-
-    return pd.read_sql(query, sai_db_engine)
 
 def read_singles_tournament_finishes():
     """
@@ -248,6 +221,55 @@ def read_singles_notable_wins():
     """
     return query
 
+
+def read_doubles_notable_wins():
+    """
+
+    :return:
+    """
+    query = """
+    WITH team_lookup AS (
+    SELECT 
+        row_id AS team_id,
+        LEAST(athlete_1_id, athlete_2_id) AS player_min,
+        GREATEST(athlete_1_id, athlete_2_id) AS player_max
+    FROM sai_badminton_final.badminton_team
+        )
+        SELECT DISTINCT 
+            c.athlete_id,
+            c.tournament_id,
+            c.tournament_match_id,
+            c.round_name,
+            c.draw_name_full,
+            c.winner,
+            t1.team_id AS team_1_id,
+            c.team_1_player_1_id,
+            c.team_1_player_1_name,
+            c.team_1_player_2_id,
+            c.team_1_player_2_name,
+            t2.team_id AS team_2_id,
+            c.team_2_player_1_id,
+            c.team_2_player_1_name,
+            c.team_2_player_2_id,
+            c.team_2_player_2_name,
+            d.tournament_name AS tournament_name,
+            d.new_grade AS tournament_grade,
+            d.start_date AS start_date,
+            d.year AS year
+        FROM sai_badminton_final.badminton_athlete_match c
+        JOIN sai_badminton_final.badminton_tournament_details_viz d 
+            ON c.tournament_id = d.tournament_id
+        LEFT JOIN team_lookup t1
+            ON t1.player_min = LEAST(c.team_1_player_1_id, c.team_1_player_2_id)
+           AND t1.player_max = GREATEST(c.team_1_player_1_id, c.team_1_player_2_id)
+        LEFT JOIN team_lookup t2
+            ON t2.player_min = LEAST(c.team_2_player_1_id, c.team_2_player_2_id)
+           AND t2.player_max = GREATEST(c.team_2_player_1_id, c.team_2_player_2_id)
+        WHERE c.athlete_id IN (72435,71612,69560,57372)
+          AND d.year > 2020;
+    """
+    return query
+
 def read_singles_ranking_table():
     """
 
@@ -255,5 +277,15 @@ def read_singles_ranking_table():
     """
     query = """
     select athlete_id,date,world_ranking from sai_badminton_final.badminton_ranking_graph_ind;
+    """
+    return query
+
+def read_doubles_ranking_table():
+    """
+
+    :return:
+    """
+    query = """
+    SELECT team_id,date,world_ranking FROM sai_badminton_final.badminton_ranking_graph_team;
     """
     return query

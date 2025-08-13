@@ -10,7 +10,7 @@ from sqlalchemy import Column, Integer, Date, String
 from orm.archery.base import Base
 
 class BadmintonSinglesRanking(Base):
-    __tablename__ = 'badminton_singles_ranking_viz'
+    __tablename__ = 'z_badminton_singles_ranking_viz'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     athlete_id = Column(Integer, nullable=False)

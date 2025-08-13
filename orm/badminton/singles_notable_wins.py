@@ -11,7 +11,7 @@ from orm.archery.base import Base
 
 
 class NotableWinsWithRanks(Base):
-    __tablename__ = "singles_notable_wins"  # Change to your target table name
+    __tablename__ = "z_badminton_singles_notable_wins_viz"  # Change to your target table name
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     tournament_id = Column(Integer)
