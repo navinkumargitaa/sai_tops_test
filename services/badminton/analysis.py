@@ -12,6 +12,7 @@ import numpy as np
 from fuzzywuzzy import process
 import calendar
 from datetime import date
+from datetime import timedelta
 import itertools
 from model.badminton.database import SessionLocal
 from model.badminton.database import read_singles_ranking_progression,read_doubles_ranking_progression,sai_db_engine
@@ -334,66 +335,174 @@ def add_date_features(df, date_col='start_date'):
     return df
 
 
-# ----------------------------
-# Step 4: Attach rankings without merge_asof
-# ----------------------------
-def attach_ranks_without_merge_asof(df, data_rank):
-    df = df.copy()
-    ranks = data_rank.copy()
+def get_previous_tuesday(date_series: pd.Series) -> pd.Series:
+    date_series = pd.to_datetime(date_series).dt.normalize()
+    days_since_tuesday = (date_series.dt.weekday - 1) % 7
+    return date_series - pd.to_timedelta(days_since_tuesday, unit='D')
 
-    # Normalize dates
-    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
-    ranks['date'] = pd.to_datetime(ranks['date'], errors='coerce')
+def _groupwise_last_leq_lookup(t_ids: pd.Series,
+                               a_ids: pd.Series,
+                               dates: pd.Series,
+                               rankings: pd.DataFrame,
+                               id_col: str) -> pd.Series:
+    """
+    For each row (tournament_id, athlete_id/opponent_id, date),
+    return the world_ranking from `rankings` at the last date <= given date,
+    computed groupwise by athlete/opponent id. No merge_asof used.
+    """
+    # Prepare inputs
+    out = pd.Series(np.nan, index=dates.index, dtype='float64')
+    # Ranking side: keep only necessary cols and sort by (id, date)
+    r = rankings[[id_col, 'date', 'world_ranking']].copy()
+    r['date'] = pd.to_datetime(r['date']).dt.normalize()
+    r = r.dropna(subset=[id_col, 'date']).sort_values([id_col, 'date'])
 
-    # Normalize IDs to integer
-    df['athlete_id'] = pd.to_numeric(df['athlete_id'], errors='coerce').astype('Int64')
-    df['opponent_id'] = pd.to_numeric(df['opponent_id'], errors='coerce').astype('Int64')
-    ranks['athlete_id'] = pd.to_numeric(ranks['athlete_id'], errors='coerce').astype('Int64')
+    # Build fast index by id -> slice in r
+    # (positions where each id's block starts/ends)
+    id_groups = r.groupby(id_col, sort=False)
 
-    # Prepare ranks: one row per (athlete_id, date), sorted by date
-    ranks = (
-        ranks[['athlete_id', 'date', 'world_ranking']]
-        .dropna(subset=['athlete_id', 'date'])
-        .drop_duplicates(subset=['athlete_id', 'date'], keep='last')
-        .sort_values(['athlete_id', 'date'], kind='mergesort')
-        .reset_index(drop=True)
-    )
+    # Iterate over ids present in tournaments (small outer loop; inner uses vector ops)
+    for pid, mask in a_ids.groupby(a_ids).groups.items():
+        if pd.isna(pid):
+            continue
+        # tournament side (rows to fill for this id)
+        idx = dates.index[mask]  # original integer index positions for this id
+        t_dates = dates.loc[idx].to_numpy(dtype='datetime64[ns]')
 
-    # Ensure rankings are integers where possible
-    ranks['world_ranking'] = pd.to_numeric(ranks['world_ranking'], errors='coerce').astype('Int64')
+        # ranking side (this id's historical rankings)
+        try:
+            block = id_groups.get_group(pid)
+        except KeyError:
+            # no rankings for this id
+            continue
 
-    # Pre-split ranks into arrays per athlete for fast lookup
-    ranks_by_id = {
-        int(aid): (g['date'].to_numpy(), g['world_ranking'].to_numpy(dtype='int64'))
-        for aid, g in ranks.groupby('athlete_id', sort=False)
-    }
+        r_dates = block['date'].to_numpy(dtype='datetime64[ns]')
+        r_vals  = block['world_ranking'].to_numpy()
 
-    def asof_lookup(ids: pd.Series, dates: pd.Series, right_map, out_name: str):
-        out = np.full(len(ids), np.nan, dtype='float64')
-        for k, idx in ids.groupby(ids, sort=False).groups.items():
-            if pd.isna(k):
-                continue
-            rd = right_map.get(int(k))
-            if rd is None:
-                continue
-            r_dates, r_vals = rd
-            pos = np.searchsorted(r_dates, dates.iloc[idx].to_numpy(), side='right') - 1
-            valid = pos >= 0
-            if np.any(valid):
-                out_idx = np.asarray(list(idx))[valid]
-                out[out_idx] = r_vals[pos[valid]]
-        # Convert to nullable integer type (keeps NaN support but shows int)
-        return pd.Series(pd.Series(out).astype('Int64'), index=ids.index, name=out_name)
+        # positions of last r_date <= t_date (binary search)
+        pos = np.searchsorted(r_dates, t_dates, side='right') - 1
+        valid = pos >= 0
+        if valid.any():
+            out.loc[idx[valid]] = r_vals[pos[valid]]
 
-    # Attach athlete and opponent world ranking
-    df['athlete_world_ranking'] = asof_lookup(df['athlete_id'], df['start_date'], ranks_by_id, 'athlete_world_ranking')
-    df['opponent_world_ranking'] = asof_lookup(df['opponent_id'], df['start_date'], ranks_by_id, 'opponent_world_ranking')
+    return out
 
-    return df
+
+
 
 # ----------------------------
 # Step 5: Pipeline Execution
 # ----------------------------
+
+def add_latest_tuesday(df, date_col, output_col="latest_tuesday", strictly_before=False):
+    """
+    Add a column with the most recent Tuesday on/before each date.
+
+    - df: DataFrame
+    - date_col: name of the input date/datetime column
+    - output_col: name of the output column to create
+    - strictly_before: if True, return the Tuesday *before* the date even when it's Tuesday
+    """
+    s = df[date_col]
+
+    # Ensure datetimelike; converts Python datetime/date or strings to datetime64[ns]
+    if not pd.api.types.is_datetime64_any_dtype(s):
+        s = pd.to_datetime(s, errors="coerce")
+
+    if s.isna().any():
+        bad_idx = s[s.isna()].index.tolist()
+        raise ValueError(f"{date_col} has unparseable values at rows: {bad_idx}")
+
+    # Monday=0, Tuesday=1, ..., Sunday=6
+    days_back = (s.dt.weekday - 1) % 7
+    if strictly_before:
+        # If already Tuesday, go back 7 days to the previous Tuesday
+        days_back = days_back.where(days_back != 0, 7)
+
+    latest = s - pd.to_timedelta(days_back, unit="D")
+
+    out = df.copy()
+    out[output_col] = latest
+    return out
+
+
+
+def attach_rank_simple(
+    df,
+    data_rank,
+    id_col="athlete_id",
+    date_col="latest_tuesday",   # in df
+    rank_date_col="date",        # in data_rank
+    rank_col="world_ranking",    # in data_rank
+    out_col="world_ranking",
+    strictly_before=False        # False => on-or-before; True => strictly before
+):
+    # Minimal copies
+    left = df[[id_col, date_col]].copy()
+    right = data_rank[[id_col, rank_date_col, rank_col]].copy()
+
+    # Parse datetimes
+    left[date_col] = pd.to_datetime(left[date_col], errors="coerce")
+    right[rank_date_col] = pd.to_datetime(right[rank_date_col], errors="coerce")
+
+    # Unify ID dtype
+    try:
+        left[id_col] = left[id_col].astype("Int64")
+        right[id_col] = right[id_col].astype("Int64")
+    except Exception:
+        left[id_col] = left[id_col].astype(str)
+        right[id_col] = right[id_col].astype(str)
+
+    # Prepare query rows
+    A = left.rename(columns={date_col: "__date__"}).copy()
+    A["_q"] = True
+    A[rank_col] = pd.NA              # placeholder
+    A["__rank_date__"] = pd.NaT
+
+    # Prepare rank rows
+    B = right.rename(columns={rank_date_col: "__date__"}).copy()
+    B["_q"] = False
+    B["__rank_date__"] = B["__date__"]
+
+    # Same-day behavior via sort order
+    if strictly_before:
+        A["_ord"] = 0; B["_ord"] = 1   # skip same-day
+    else:
+        A["_ord"] = 1; B["_ord"] = 0   # include same-day
+
+    C = pd.concat([A, B], ignore_index=True, sort=False)
+    C = C.sort_values([id_col, "__date__", "_ord"])
+
+    # Avoid name collision if out_col == rank_col
+    out_value_col = out_col if out_col != rank_col else "__out_value__"
+
+    # Forward-fill within athlete
+    C[out_value_col] = C.groupby(id_col)[rank_col].ffill()
+    C["__rank_date__"] = C.groupby(id_col)["__rank_date__"].ffill()
+
+    # Keep only query rows and rename
+    drop_cols = ["_q", "_ord"]
+    # Only drop rank_col if it's different from out_value_col
+    if rank_col != out_value_col:
+        drop_cols.append(rank_col)
+
+    out = (
+        C[C["_q"]]
+        .drop(columns=drop_cols)
+        .rename(columns={
+            "__date__": date_col,
+            "__rank_date__": f"{rank_date_col}_matched",
+            out_value_col: out_col
+        })
+    )
+
+    # Merge back to original df
+    return df.merge(
+        out[[id_col, date_col, out_col, f"{rank_date_col}_matched"]],
+        on=[id_col, date_col],
+        how="left"
+    )
+
 def process_singles_notable_wins():
     data = pd.read_sql_query(read_singles_notable_wins(), con=sai_db_engine)
     data_rank = pd.read_sql_query(read_singles_ranking_table(), con=sai_db_engine)
@@ -405,8 +514,47 @@ def process_singles_notable_wins():
     # Ensure data_rank dates are parsed
     data_rank = data_rank.copy()
     data_rank['date'] = pd.to_datetime(data_rank['date'], errors='coerce')
+    df["athlete_id"] = pd.to_numeric(df["athlete_id"], errors="coerce").astype("Int64")
+    df["opponent_id"] = pd.to_numeric(df["opponent_id"], errors="coerce").astype("Int64")
+    # Example: ensure correct datetime parsing
+    df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
+    # Format as YYYY-MM-DD
+    df["start_date"] = df["start_date"].dt.strftime("%Y-%m-%d")
 
-    df = attach_ranks_without_merge_asof(df, data_rank)
+    # Ensure same integer type
+    df["athlete_id"] = df["athlete_id"].astype("int64")
+    data_rank["athlete_id"] = data_rank["athlete_id"].astype("int64")
+    df = add_latest_tuesday(df,'start_date')
+
+
+    # 1) Athlete’s ranking (on-or-before latest_tuesday)
+    df = attach_rank_simple(
+        df, data_rank,
+        id_col="athlete_id",
+        date_col="latest_tuesday",
+        rank_date_col="date",
+        rank_col="world_ranking",
+        out_col="athlete_world_ranking",  # new column in df
+        strictly_before=False
+    )
+
+    # 2) Opponent’s ranking
+    #    Rename columns in a *copy* of data_rank so they align with df's opponent_id
+    dr_opp = data_rank.rename(columns={
+        "athlete_id": "opponent_id",
+        "date": "opponent_date"  # lets us get a separate *_matched column
+    })
+
+    df = attach_rank_simple(
+        df, dr_opp,
+        id_col="opponent_id",  # joins on df.opponent_id
+        date_col="latest_tuesday",
+        rank_date_col="opponent_date",  # so the matched date column is opponent_date_matched
+        rank_col="world_ranking",
+        out_col="opponent_world_ranking",
+        strictly_before=False
+    )
+    #df = add_match_rankings(df, data_rank)
 
     final_cols = [
         'tournament_id', 'tournament_name', 'tournament_grade', 'round_name',
@@ -414,7 +562,52 @@ def process_singles_notable_wins():
         'win_flag', 'start_date','year',
         'athlete_world_ranking', 'opponent_world_ranking'
     ]
+
     return df[final_cols]
+
+
+def add_notable_wins_and_losses(df):
+    """
+    Adds 'notable_win' and 'lost_to' columns to the DataFrame.
+
+    Notable Win: Athlete wins against a better-ranked opponent
+                 (numerically smaller rank value is better).
+    Lost To: Athlete loses to any opponent.
+
+    Parameters:
+        df (pd.DataFrame): DataFrame with required columns:
+            'win_flag', 'athlete_world_ranking', 'opponent_world_ranking',
+            'opponent_name'
+
+    Returns:
+        pd.DataFrame: Updated DataFrame with new columns.
+    """
+
+    def format_name_rank(name, rank):
+        return f"{name} ({rank})"
+
+    df = df.drop_duplicates()
+    # Notable wins
+    df['notable_win'] = df.apply(
+        lambda row: format_name_rank(row['opponent_name'], row['opponent_world_ranking'])
+        if (row['win_flag'] == 'Won') and (row['athlete_world_ranking'] > row['opponent_world_ranking'])
+        else '-',
+        axis=1
+    )
+
+    # Lost to
+    df['lost_to'] = df.apply(
+        lambda row: format_name_rank(row['opponent_name'], row['opponent_world_ranking'])
+        if row['win_flag'] == 'Lost'
+        else 'Won',
+        axis=1
+    )
+
+    return df
+
+
+
+
 
 """
 Doubles Notable wins
@@ -626,8 +819,6 @@ def process_doubles_notable_wins():
     ]
     return df[final_cols]
 
-import pandas as pd
-import numpy as np
 
 def build_notable_wins_doubles_final_table(df: pd.DataFrame) -> pd.DataFrame:
     """

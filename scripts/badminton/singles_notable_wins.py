@@ -13,13 +13,13 @@ import pandas as pd
 from sqlalchemy.orm import sessionmaker
 
 # Import ORM model and base class
-from orm.badminton.singles_notable_wins import NotableWinsWithRanks,Base
+from orm.badminton.singles_notable_wins import NotableWinsSinglesFinal,Base
 
 # Import database engine
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_singles_notable_wins
+from services.badminton.analysis import process_singles_notable_wins,build_notable_wins_singles_final_table,add_notable_wins_and_losses
 
 def main():
     """
@@ -34,40 +34,45 @@ def main():
     print("✅ Table created successfully (or already exists).")
 
     # Step 2: Force table creation
-    Base.metadata.create_all(bind=sai_db_engine, tables=[NotableWinsWithRanks.__table__])
+    Base.metadata.create_all(bind=sai_db_engine, tables=[NotableWinsSinglesFinal.__table__])
     print("Table creation attempted.")
 
     # Step 2: Extract and transform ranking data
-    notable_wins_singles = process_singles_notable_wins()
+    process_notable_wins_singles = process_singles_notable_wins()
     print("✅ Data extracted and transformed:")
 
+    #notable_wins_singles = build_notable_wins_singles_final_table(process_notable_wins_singles)
 
+    notable_wins_singles = add_notable_wins_and_losses(process_notable_wins_singles)
     # Step 3: Initialize the database session
     Session = sessionmaker(bind=sai_db_engine)
     session = Session()
 
     try:
         # Optional: Clear existing records (uncomment if needed)
-        # session.query(BadmintonTournamentProcessing).delete()
+        # session.query(NotableWinsSinglesFinal).delete()
         # session.commit()
 
         records = [
-            NotableWinsWithRanks(
-                tournament_id=int(row["tournament_id"]),
-                tournament_name=row["tournament_name"],
-                tournament_grade=row["tournament_grade"],
-                round_name=row["round_name"],
-                athlete_id=None if pd.isna(row["athlete_id"]) else int(row["athlete_id"]),
-                athlete_name=row["athlete_name"],
-                opponent_id=None if pd.isna(row["opponent_id"]) else int(row["opponent_id"]),
-                opponent_name=row["opponent_name"],
-                win_flag=row["win_flag"],
-                start_date=row["start_date"],
-                year=int(row["year"]),
-                athlete_world_ranking=None if pd.isna(row["athlete_world_ranking"]) else int(
-                    row["athlete_world_ranking"]),
-                opponent_world_ranking=None if pd.isna(row["opponent_world_ranking"]) else int(
-                    row["opponent_world_ranking"])
+            NotableWinsSinglesFinal(
+                tournament_id=int(row["tournament_id"]) if not pd.isna(row["tournament_id"]) else None,
+                tournament_name=row.get("tournament_name"),
+                tournament_grade=row.get("tournament_grade"),
+                round_name=row.get("round_name"),
+                athlete_id=int(row["athlete_id"]) if not pd.isna(row["athlete_id"]) else None,
+                athlete_name=row.get("athlete_name"),
+                opponent_id=int(row["opponent_id"]) if not pd.isna(row["opponent_id"]) else None,
+                opponent_name=row.get("opponent_name"),
+                win_flag=row["win_flag"] if not pd.isna(row["win_flag"]) else None,
+                start_date=pd.to_datetime(row["start_date"], errors="coerce").date()
+                if not pd.isna(row["start_date"]) else None,
+                year=int(row["year"]) if not pd.isna(row["year"]) else None,
+                athlete_world_ranking=int(row["athlete_world_ranking"]) if not pd.isna(
+                    row["athlete_world_ranking"]) else None,
+                opponent_world_ranking=int(row["opponent_world_ranking"]) if not pd.isna(
+                    row["opponent_world_ranking"]) else None,
+                notable_win=row["notable_win"] if not pd.isna(row["notable_win"]) else None,
+                lost_to=row.get("lost_to")
             )
             for _, row in notable_wins_singles.iterrows()
         ]
@@ -75,7 +80,7 @@ def main():
         # Step 5: Insert records
         session.add_all(records)
         session.commit()
-        print(f"✅ Loaded {len(records)} records into the badminton_tournament_details_viz table.")
+        print(f"✅ Loaded {len(records)} records into z_badminton_singles_notable_wins_final.")
 
     except Exception as e:
         session.rollback()
