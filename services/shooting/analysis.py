@@ -116,12 +116,32 @@ def calculate_qmin_qmax(df: pd.DataFrame) -> pd.DataFrame:
 
     return event_q_min_q_max
 
+def get_y_min_y_max():
+    """
+
+    :return:
+    """
+
+    df = pd.read_csv("/home/navin/Desktop/SAI/sai_tops_testing/data/shooting/shooting_y_min_max.csv")
+
+    return df
+
 
 def attach_q_min_q_max(merged_df: pd.DataFrame, q_minmax_df: pd.DataFrame) -> pd.DataFrame:
     """
     Attach qmin and qmax to the merged DataFrame based on event_name.
     """
     return pd.merge(merged_df, q_minmax_df, on='event_name', how='left')
+
+def attach_y_min_y_max(merged_df: pd.DataFrame, y_min_max_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Attach the given y min and y max for the events
+    :param merged_df:
+    :param y_min_max_df:
+    :return:
+    """
+
+    return pd.merge(merged_df, y_min_max_df, on='event_name', how='left')
 
 
 def populate_athlete_rank_distribution() -> None:

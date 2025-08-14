@@ -44,3 +44,5 @@ class ShootingResultsViz(Base):
     comp_short_name = Column(String(100))
     q_min = Column(Float)                                        # Computed lower threshold for qualification (mean - std dev)
     q_max = Column(Float)
+    y_min = Column(Integer)
+    y_max = Column(Integer)

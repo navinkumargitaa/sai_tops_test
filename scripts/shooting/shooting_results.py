@@ -17,7 +17,7 @@ from orm.shooting.athlete_shooting_results import ShootingResultsViz, Base
 # Import database engine
 from model.shooting.database import sai_db_engine
 
-from services.shooting.analysis import load_shooting_results_data,load_all_results_data,prepare_ranked_results,calculate_qmin_qmax,attach_q_min_q_max
+from services.shooting.analysis import load_shooting_results_data,load_all_results_data,prepare_ranked_results,calculate_qmin_qmax,attach_q_min_q_max,get_y_min_y_max,attach_y_min_y_max
 
 def main():
     """
@@ -47,8 +47,12 @@ def main():
     qual_df_all = load_all_results_data(sai_db_engine)
     qminmax_df = calculate_qmin_qmax(qual_df_all)
 
+
+
     # Step 3: Merge qmin/qmax into main results
     final_df = attach_q_min_q_max(merged_df, qminmax_df)
+    y_min_y_max = get_y_min_y_max()
+    shooting_results = attach_y_min_y_max(final_df,y_min_y_max)
 
     records = [
         ShootingResultsViz(
@@ -67,9 +71,11 @@ def main():
             comp_type=row.get("comp_type"),
             comp_short_name=row.get('comp_short_name'),
             q_min=row.get("q_min"),
-            q_max=row.get("q_max")
+            q_max=row.get("q_max"),
+            y_min = row.get("y_min"),
+            y_max = row.get("y_max")
         )
-        for _, row in final_df.iterrows()
+        for _, row in shooting_results.iterrows()
     ]
 
     # Step 5: Add all records to the session
