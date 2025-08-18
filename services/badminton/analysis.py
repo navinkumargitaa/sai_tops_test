@@ -193,6 +193,17 @@ def process_tournament_grade():
     # Fill missing ones from matched_grade
     tournament_data.loc[missing_data.index, 'new_grade'] = missing_data['matched_grade']
 
+    tournament_data['new_grade'] = tournament_data['new_grade'].replace({
+        "final": "Grade 1",
+        "100": "Super 100",
+        "300": "Super 300",
+        "500": "Super 500",
+        "750": "Super 750",
+        "1000": "Super 1000"
+    })
+
+
+
     return tournament_data
 
 
@@ -238,22 +249,28 @@ def make_static_columns(df, order_grade_levels, order_position_stages):
     for col in desired_cols:
         if col not in df.columns:
             df[col] = 0
-    return df[['athlete_id', 'athlete_name', 'tournament_year'] + desired_cols]
+
+    df = df[['athlete_id', 'athlete_name', 'tournament_year'] + desired_cols]
+
+    return df
 
 def process_singles_tournament_finishes():
     """Main processing pipeline."""
 
     query = read_singles_tournament_finishes()
     df = pd.read_sql_query(query, con=sai_db_engine)
-    doubles_filtered = pd.read_csv(
+    singles_filtered = pd.read_csv(
         '/home/navin/Desktop/SAI/sai_tops_testing/data/badminton/singles_category_filtered.csv')
-    data= df.merge(doubles_filtered, on=["athlete_id", "category"], how="inner")
+    data= df.merge(singles_filtered, on=["athlete_id", "category"], how="inner")
 
-    order_grade_levels = ["Junior", "G3", "100", "300", "500", "750", "1000", "Grade 1"]
-    order_position_stages = ["<R32", "R32", "R16", "QF", "SF", "F"]
+    order_grade_levels = ["Junior", "G3", "Super 100", "Super 300", "Super 500", "Super 750", "Super 1000", "Grade 1"]
+    order_position_stages = ["LT_R32", "R32", "R16", "QF", "SF", "F"]
 
     pivot_df = clean_and_transform_data(data)
-    return make_static_columns(pivot_df, order_grade_levels, order_position_stages)
+    final_df = make_static_columns(pivot_df, order_grade_levels, order_position_stages)
+
+    return final_df
+
 
 def process_doubles_tournament_finishes():
     """Main processing pipeline."""
@@ -263,12 +280,12 @@ def process_doubles_tournament_finishes():
         '/home/navin/Desktop/SAI/sai_tops_testing/data/badminton/doubles_category_filtered.csv')
     data =  df.merge(doubles_filtered, on=["athlete_id", "category"], how="inner")
 
-
-    order_grade_levels = ["Junior", "G3", "100", "300", "500", "750", "1000", "Grade 1"]
-    order_position_stages = ["<R32", "R32", "R16", "QF", "SF", "F"]
+    order_grade_levels = ["Junior", "G3", "Super 100", "Super 300", "Super 500", "Super 750", "Super 1000", "Grade 1"]
+    order_position_stages = ["LT_R32", "R32", "R16", "QF", "SF", "F"]
 
     pivot_df = clean_and_transform_data(data)
-    return make_static_columns(pivot_df, order_grade_levels, order_position_stages)
+    final_df = make_static_columns(pivot_df, order_grade_levels, order_position_stages)
+    return final_df
 
 
 
@@ -307,7 +324,7 @@ def add_win_flag_and_names(df):
 # ----------------------------
 def clean_and_reorder_columns(df):
     drop_cols = [
-        'tournament_match_id', 'draw_name_full', 'winner',
+        'draw_name_full', 'winner',
         'team_1_player_1_id', 'team_1_player_1_name',
         'team_2_player_1_id', 'team_2_player_1_name',
         'date', 'year'
@@ -315,7 +332,7 @@ def clean_and_reorder_columns(df):
     df = df.drop(columns=[col for col in drop_cols if col in df.columns], errors='ignore')
 
     final_order = [
-        'tournament_id', 'tournament_name', 'tournament_grade',
+        'tournament_id', 'tournament_match_id','tournament_name', 'tournament_grade',
         'round_name', 'athlete_id', 'athlete_name',
         'opponent_id', 'opponent_name', 'win_flag',
         'start_date'
@@ -499,13 +516,15 @@ def process_singles_notable_wins():
     #df = add_match_rankings(df, data_rank)
 
     final_cols = [
-        'tournament_id', 'tournament_name', 'tournament_grade', 'round_name',
+        'tournament_id', 'tournament_match_id','tournament_name', 'tournament_grade', 'round_name',
         'athlete_id', 'athlete_name', 'opponent_id', 'opponent_name',
         'win_flag', 'start_date','year',
         'athlete_world_ranking', 'opponent_world_ranking'
     ]
 
-    return df[final_cols]
+    df = df[final_cols]
+
+    return df
 
 
 def add_notable_wins_and_losses(df):
@@ -544,6 +563,7 @@ def add_notable_wins_and_losses(df):
         else 'Won',
         axis=1
     )
+    df = df.sort_values(by='start_date', ascending=False)
 
     return df
 
@@ -789,6 +809,8 @@ def add_notable_wins_and_losses_doubles(df):
         else 'Won',
         axis=1
     )
+
+    df = df.sort_values(by='start_date', ascending=False)
 
     return df
 

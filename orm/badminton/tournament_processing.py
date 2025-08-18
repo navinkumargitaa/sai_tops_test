@@ -11,7 +11,7 @@ from orm.archery.base import Base
 
 
 class BadmintonTournamentProcessing(Base):
-    __tablename__ = 'badminton_tournament_details_viz'
+    __tablename__ = 'z_badminton_tournament_details_viz'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     tournament_id = Column(Integer, nullable=False)

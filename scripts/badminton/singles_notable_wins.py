@@ -19,7 +19,7 @@ from orm.badminton.singles_notable_wins import NotableWinsSinglesFinal,Base
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_singles_notable_wins,build_notable_wins_singles_final_table,add_notable_wins_and_losses
+from services.badminton.analysis import process_singles_notable_wins,add_notable_wins_and_losses
 
 def main():
     """

@@ -126,8 +126,8 @@ def read_singles_tournament_finishes():
     query = """
     SELECT DISTINCT 
     a.tournament_id AS tournament_id,
-    b.name AS tournament_name,
-    b.grade AS tournament_grade,
+    b.tournament_name AS tournament_name,
+    b.new_grade AS tournament_grade,
     b.date AS tournament_date,
     b.year AS tournament_year,
     a.athlete_id AS athlete_id,
@@ -135,7 +135,7 @@ def read_singles_tournament_finishes():
     a.name AS category,
     a.position AS final_position
     FROM sai_badminton_final.badminton_athlete_tournament_draw a
-    INNER JOIN sai_badminton_final.badminton_athlete_tournament b
+    INNER JOIN sai_badminton_final.z_badminton_tournament_details_viz b
         ON a.tournament_id = b.tournament_id AND a.athlete_id = b.athlete_id
     INNER JOIN sai_badminton_final.badminton_athlete c
         ON a.athlete_id = c.athlete_id
@@ -169,12 +169,11 @@ def read_doubles_tournament_finishes():
     a.name AS category,
     a.position AS final_position
     FROM sai_badminton_final.badminton_athlete_tournament_draw a
-    INNER JOIN sai_badminton_final.badminton_tournament_details_viz b
+    INNER JOIN sai_badminton_final.z_badminton_tournament_details_viz b
         ON a.tournament_id = b.tournament_id AND a.athlete_id = b.athlete_id
     INNER JOIN sai_badminton_final.badminton_athlete c
         ON a.athlete_id = c.athlete_id
     WHERE a.athlete_id IN (72435,71612,69560,57372);
-
     """
 
     return query
@@ -201,7 +200,7 @@ def read_singles_notable_wins():
     b.start_date AS start_date,
     b.year AS year
     FROM sai_badminton_final.badminton_athlete_match a
-    JOIN sai_badminton_final.badminton_tournament_details_viz b
+    JOIN sai_badminton_final.z_badminton_tournament_details_viz b
         ON a.tournament_id = b.tournament_id
     WHERE a.athlete_id IN (
         83950, 68870, 73173, 69093, 59687, 74481, 58664, 68322, 
@@ -257,7 +256,7 @@ def read_doubles_notable_wins():
             d.start_date AS start_date,
             d.year AS year
         FROM sai_badminton_final.badminton_athlete_match c
-        JOIN sai_badminton_final.badminton_tournament_details_viz d 
+        JOIN sai_badminton_final.z_badminton_tournament_details_viz d 
             ON c.tournament_id = d.tournament_id
         LEFT JOIN team_lookup t1
             ON t1.player_min = LEAST(c.team_1_player_1_id, c.team_1_player_2_id)
