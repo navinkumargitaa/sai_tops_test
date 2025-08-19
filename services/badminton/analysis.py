@@ -565,6 +565,9 @@ def add_notable_wins_and_losses(df):
     )
     df = df.sort_values(by='start_date', ascending=False)
 
+    df.loc[(df['round_name'] == 'Final') & (df['win_flag'] == 'Won') & (df['lost_to'] == 'Won'),
+    'lost_to'] = '1st Position'
+
     return df
 
 """
@@ -811,6 +814,9 @@ def add_notable_wins_and_losses_doubles(df):
     )
 
     df = df.sort_values(by='start_date', ascending=False)
+
+    df.loc[(df['round_name'] == 'Final') & (df['win_flag'] == 'Won') & (df['lost_to'] == 'Won'),
+    'lost_to'] = '1st Position'
 
     return df
 
