@@ -40,7 +40,7 @@ def main():
     session = Session()  # Create a new session instance
 
     # Step 1: Load and process main data
-    raw_df = load_shooting_results_data(sai_db_engine)
+    raw_df = load_shooting_results_data()
     merged_df = prepare_ranked_results(raw_df)
 
     # Step 2: Load and process qmin/qmax data

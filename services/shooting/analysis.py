@@ -10,11 +10,39 @@ __author__ = "navin@gitaa.in"
 import pandas as pd
 from model.shooting.database import read_shooting_results,read_all_shooting_results,sai_db_engine
 
-def load_shooting_results_data(engine) -> pd.DataFrame:
+def load_shooting_results_data() -> pd.DataFrame:
     """Load shooting results for both Qualification and Final."""
     query = read_shooting_results()
-    return pd.read_sql(query, engine)
 
+    data = pd.read_sql(query,con=sai_db_engine)
+
+    # Values to remove
+    remove_list = ['Elimination Relay 1', 'Elimination Relay 2']
+
+    # Mapping
+    map_dict = {
+        # Final
+        'Medal Match': 'Final',
+        'Ranking Match 2': 'Final',
+        'Gold Medal Match': 'Final',
+        'Ranking Match': 'Final',
+        'Ranking Match 1': 'Final',
+
+        # Qualification
+        'Qualification Stage 2': 'Qualification',
+        'Qualification Rapid': 'Qualification',
+        'Qualification Summary Rapid Fire': 'Qualification',
+        'Qualification Summary Day 2': 'Qualification',
+        'Qualification SingleStage': 'Qualification'
+    }
+
+    # Step 1: Remove unwanted rows
+    data = data[~data['event_type'].isin(remove_list)]
+
+    # Step 2: Map values
+    data['event_type'] = data['event_type'].replace(map_dict)
+
+    return data
 
 def load_all_results_data(engine) -> pd.DataFrame:
     """Load all results for top competitions."""

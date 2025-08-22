@@ -38,31 +38,31 @@ def read_shooting_results() -> str:
 
     query = f"""
         SELECT
-            r.competition_id AS competition_id,
-            r.competition_name AS competition_name,
-            r.event_name AS event_name,
-            r.event_type AS event_type,
-            r.year AS comp_year,
-            r.competition_date AS comp_date,
-            r.rank AS comp_rank,
-            r.athlete_name AS athlete_name,
-            r.total AS score,
-            c.nation_name AS host_nation,
-            c.nation_code AS host_nation_code,
-            c.city AS host_city,
-            c.competition_type AS comp_type
-        FROM sai_shooting_final.shooting_results r
-        INNER JOIN sai_shooting_final.shooting_athlete_events bio
-            ON r.athlete_name COLLATE utf8mb4_unicode_520_ci = bio.athlete_name COLLATE utf8mb4_unicode_520_ci
-            AND r.event_name COLLATE utf8mb4_unicode_520_ci = bio.athlete_event COLLATE utf8mb4_unicode_520_ci
-        INNER JOIN sai_shooting_final.shooting_competition c
-            ON r.competition_id = c.competition_id
-        WHERE r.athlete_name IN (
-            {athlete_list_sql}
-        )
-        AND r.year >= 2023
-        AND r.event_type IN ('Qualification', 'Final')
-        ORDER BY r.athlete_name, r.event_name;
+        r.competition_id AS competition_id,
+        r.competition_name AS competition_name,
+        r.event_name AS event_name,
+        r.event_type AS event_type,
+        r.year AS comp_year,
+        r.competition_date AS comp_date,
+        r.rank AS comp_rank,
+        r.athlete_name AS athlete_name,
+        r.total AS score,
+        c.nation_name AS host_nation,
+        c.nation_code AS host_nation_code,
+        c.city AS host_city,
+        c.competition_type AS comp_type
+    FROM sai_shooting_final.shooting_results r
+    INNER JOIN sai_shooting_final.shooting_events_viz bio
+        ON r.athlete_name = bio.athlete_name
+        AND r.event_name = bio.athlete_event
+    INNER JOIN sai_shooting_final.shooting_competition c
+        ON r.competition_id = c.competition_id
+    WHERE r.athlete_name IN (
+        {athlete_list_sql}
+    )
+    AND r.year >= 2023
+    ORDER BY r.athlete_name, r.event_name;
+
     """
     return query
 
