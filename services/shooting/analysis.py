@@ -56,10 +56,13 @@ def clean_score_column(df: pd.DataFrame, score_column: str = 'score') -> pd.Data
     return df
 
 
+
 def prepare_ranked_results(df: pd.DataFrame) -> pd.DataFrame:
     """
     Merge qualification and final results to get last attained rank
     and identify whether it was from qualification or final round.
+    Keeps only one event_url corresponding to the last attained rank.
+    Handles comp_type/host_city safely.
     """
     qual_df = df[df['event_type'] == 'Qualification'].copy()
     final_df = df[df['event_type'] == 'Final'].copy()
@@ -70,19 +73,19 @@ def prepare_ranked_results(df: pd.DataFrame) -> pd.DataFrame:
         final_df[[
             'competition_id', 'competition_name', 'event_name', 'athlete_name',
             'comp_rank', 'comp_year', 'comp_date', 'host_nation', 'host_nation_code',
-            'host_city', 'comp_type'
+            'host_city', 'comp_type','comp_url','event_url'
         ]]
-        .rename(columns={'comp_rank': 'last_attained_rank'})
+        .rename(columns={'comp_rank': 'last_attained_rank', 'event_url': 'event_url_final'})
     )
 
     qual_ranks = (
         qual_df[[
             'competition_id', 'competition_name', 'event_name', 'athlete_name',
             'comp_rank', 'score', 'comp_year', 'comp_date', 'host_nation', 'host_nation_code',
-            'host_city', 'comp_type'
+            'host_city', 'comp_type','comp_url','event_url'
         ]]
         .drop_duplicates(subset=['competition_id', 'competition_name', 'event_name', 'athlete_name'])
-        .rename(columns={'comp_rank': 'qual_rank'})
+        .rename(columns={'comp_rank': 'qual_rank', 'event_url': 'event_url_qual'})
     )
 
     merged = pd.merge(
@@ -92,8 +95,10 @@ def prepare_ranked_results(df: pd.DataFrame) -> pd.DataFrame:
         suffixes=('', '_final')
     )
 
+    # Determine last attained rank
     merged['last_attained_rank'] = merged['last_attained_rank'].fillna(merged['qual_rank'])
 
+    # Determine rank type
     merged['rank_type'] = merged.apply(
         lambda row: 'Final'
         if not pd.isna(row['last_attained_rank']) and not pd.isna(row['qual_rank']) and row['last_attained_rank'] != row['qual_rank']
@@ -101,21 +106,31 @@ def prepare_ranked_results(df: pd.DataFrame) -> pd.DataFrame:
         axis=1
     )
 
-    merged.drop(columns=['qual_rank'], inplace=True)
+    # Choose event_url based on last attained rank
+    merged['event_url'] = merged.apply(
+        lambda row: row['event_url_final'] if row['rank_type'] == 'Final' else row['event_url_qual'],
+        axis=1
+    )
 
+    merged.drop(columns=['qual_rank', 'event_url_final', 'event_url_qual'], inplace=True)
+
+    # Create comp_short_name safely (handles missing values)
     merged["comp_short_name"] = (
-            merged['comp_type'] + '-' +
-            merged['host_city'] + '-' +
-            merged['comp_year'].astype(str)
+        merged.get('comp_type', 'NA').fillna('NA').astype(str) + '-' +
+        merged.get('host_city', 'NA').fillna('NA').astype(str) + '-' +
+        merged.get('comp_year', 0).astype(str)
     )
 
     final_columns = [
         'competition_id', 'competition_name', 'event_name', 'comp_year', 'comp_date',
         'athlete_name', 'score', 'last_attained_rank', 'rank_type',
-        'host_nation', 'host_nation_code', 'host_city', 'comp_type','comp_short_name'
+        'host_nation', 'host_nation_code', 'host_city', 'comp_type','comp_short_name','comp_url','event_url'
     ]
 
     return merged[final_columns]
+
+
+
 
 
 def calculate_qmin_qmax(df: pd.DataFrame) -> pd.DataFrame:

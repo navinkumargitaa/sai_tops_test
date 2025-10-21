@@ -59,6 +59,8 @@ def main():
             competition_id=row.get("competition_id"),
             competition_name=row.get("competition_name"),
             event_name=row.get("event_name"),
+            comp_url=row.get("comp_url"),
+            event_url=row.get("event_url"),
             comp_year=row.get("comp_year"),
             comp_date=row.get("comp_date"),
             athlete_name=row.get("athlete_name"),

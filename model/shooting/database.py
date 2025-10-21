@@ -40,6 +40,8 @@ def read_shooting_results() -> str:
         SELECT
         r.competition_id AS competition_id,
         r.competition_name AS competition_name,
+        r.competition_url as comp_url,
+        r.event_url as event_url,
         r.event_name AS event_name,
         r.event_type AS event_type,
         r.year AS comp_year,
