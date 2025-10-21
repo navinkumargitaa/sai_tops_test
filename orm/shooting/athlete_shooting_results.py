@@ -28,7 +28,8 @@ class ShootingResultsViz(Base):
     event_name = Column(String(255), nullable=False)            # Specific event name (e.g., 10m Air Rifle Men)
 
     comp_url = Column(String(500))  # URL for competition page or source
-    event_url = Column(String(500))
+    event_url_qual = Column(String(500))
+    event_url_final = Column(String(500))
 
     comp_year = Column(Integer, nullable=False)                 # Year of the competition
     comp_date = Column(Date, nullable=False)                    # Actual date of the competition
