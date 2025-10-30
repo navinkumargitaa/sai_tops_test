@@ -19,7 +19,8 @@ from orm.badminton.singles_notable_wins import NotableWinsSinglesFinal,Base
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_singles_notable_wins,add_notable_wins_and_losses
+from services.badminton.analysis_new import process_singles_notable_wins
+#,add_notable_wins_and_losses)
 
 def main():
     """
@@ -43,7 +44,7 @@ def main():
 
     #notable_wins_singles = build_notable_wins_singles_final_table(process_notable_wins_singles)
 
-    notable_wins_singles = add_notable_wins_and_losses(process_notable_wins_singles)
+    #notable_wins_singles = add_notable_wins_and_losses(process_notable_wins_singles)
     # Step 3: Initialize the database session
     Session = sessionmaker(bind=sai_db_engine)
     session = Session()
@@ -74,7 +75,7 @@ def main():
                 notable_win=row["notable_win"] if not pd.isna(row["notable_win"]) else None,
                 lost_to=row.get("lost_to")
             )
-            for _, row in notable_wins_singles.iterrows()
+            for _, row in process_notable_wins_singles.iterrows()
         ]
 
         # Step 5: Insert records

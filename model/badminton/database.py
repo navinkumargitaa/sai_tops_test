@@ -15,7 +15,7 @@ import pandas as pd
 # -----------------------------#
 
 # Create SQLAlchemy engine
-sai_db_engine = create_engine("mysql+pymysql://root:root@localhost:3306/sai_badminton_final")
+sai_db_engine = create_engine("mysql+pymysql://root:passw0rd@localhost:9001/sai_badminton_final")
 SessionLocal = sessionmaker(bind=sai_db_engine)
 
 # -----------------------------#
