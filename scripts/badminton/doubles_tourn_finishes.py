@@ -19,7 +19,9 @@ from orm.badminton.doubles_tournament_finishes import BadmintonDoublesTournament
 from model.badminton import sai_db_engine
 
 
-from services.badminton.analysis import process_doubles_tournament_finishes
+# from services.badminton.analysis import process_doubles_tournament_finishes
+
+from services.badminton.analysis_new import process_doubles_tournament_finishes
 
 def main():
     """

@@ -583,3 +583,120 @@ def process_doubles_notable_wins():
     final_df = add_notable_win_column_doubles(df)
     return final_df
 
+def clean_and_transform_data():
+    """Map positions, clean data, and create pivot table."""
+    position_map = {
+        "R32": "R32", "R16": "R16", "QF": "QF", "N/A": "Team", "1st": "F", "3/4": "SF",
+        "3rd": "SF", "2nd": "F", "Qual. R16": "<R32", "R64": "<R32", "Qual. QF": "<R32",
+        "Qual. R32": "<R32", "-": None, "R128": "<R32", "Round of 16": "R16", "R3": "<R32",
+        "Qual. R128": "<R32", "Qual. R64": "<R32", "R4": "R32", "Final": "F", "R2": "<R32",
+        "SF": "SF", "R5": "R16", "Quarterfinals": "QF", "Group A": "<R32"
+    }
+    data = process_doubles_notable_wins()
+    # Replace values
+    data['round_name'] = data['round_name'].replace(position_map)
+    data['tournament_grade'] = data['tournament_grade'].replace('final', '1000')
+
+
+    # Create pivot table
+    pivot_df = data.pivot_table(
+        index=['athlete_team_id', 'athlete_team_name', 'year', 'tournament_grade'],
+        columns='round_name',
+        aggfunc='size',
+        fill_value=0
+    )
+
+    # Unstack grade level into columns
+    pivot_df = pivot_df.unstack(level='tournament_grade', fill_value=0)
+
+    # Flatten MultiIndex columns
+    pivot_df.columns = [f"{grade}_{pos}" for pos, grade in pivot_df.columns]
+
+    return pivot_df.reset_index()
+
+def make_static_columns(df, order_grade_levels, order_position_stages):
+    """Ensure all grade-position combinations exist and reorder columns."""
+    desired_cols = [f"{grade}_{pos}" for grade, pos in itertools.product(order_grade_levels, order_position_stages)]
+    for col in desired_cols:
+        if col not in df.columns:
+            df[col] = 0
+
+    df = df[['athlete_id', 'athlete_name', 'year'] + desired_cols]
+
+    return df
+
+
+
+def process_singles_tournament_finishes():
+    """Main processing pipeline."""
+
+    pivot_df = clean_and_transform_data()
+    order_grade_levels = ["Junior", "G3", "Super 100", "Super 300", "Super 500", "Super 750", "Super 1000", "Grade 1"]
+    order_position_stages = ["LT_R32", "R32", "R16", "QF", "SF", "F"]
+
+
+    final_df = make_static_columns(pivot_df, order_grade_levels, order_position_stages)
+    final_df = final_df.rename(columns={'year': 'tournament_year'})
+    final_df = final_df.drop_duplicates(subset=['athlete_id', 'tournament_year'], keep='last')
+
+    return final_df
+
+
+def clean_and_transform_data_doubles():
+    """Map positions, clean data, and create pivot table."""
+    position_map = {
+        "R32": "R32", "R16": "R16", "QF": "QF", "N/A": "Team", "1st": "F", "3/4": "SF",
+        "3rd": "SF", "2nd": "F", "Qual. R16": "<R32", "R64": "<R32", "Qual. QF": "<R32",
+        "Qual. R32": "<R32", "-": None, "R128": "<R32", "Round of 16": "R16", "R3": "<R32",
+        "Qual. R128": "<R32", "Qual. R64": "<R32", "R4": "R32", "Final": "F", "R2": "<R32",
+        "SF": "SF", "R5": "R16", "Quarterfinals": "QF", "Group A": "<R32"
+    }
+    new_data = process_doubles_notable_wins()
+    # Replace values
+    new_data['round_name'] = new_data['round_name'].replace(position_map)
+    new_data['tournament_grade'] = new_data['tournament_grade'].replace('final', '1000')
+
+
+    # Create pivot table
+    pivot_df = new_data.pivot_table(
+        index=['athlete_team_id', 'athlete_team_name', 'year', 'tournament_grade'],
+        columns='round_name',
+        aggfunc='size',
+        fill_value=0
+    )
+
+    # Unstack grade level into columns
+    pivot_df = pivot_df.unstack(level='tournament_grade', fill_value=0)
+
+    # Flatten MultiIndex columns
+    pivot_df.columns = [f"{grade}_{pos}" for pos, grade in pivot_df.columns]
+
+    return pivot_df.reset_index()
+
+def make_static_columns_doubles(df, order_grade_levels, order_position_stages):
+    """Ensure all grade-position combinations exist and reorder columns."""
+    desired_cols = [f"{grade}_{pos}" for grade, pos in itertools.product(order_grade_levels, order_position_stages)]
+    for col in desired_cols:
+        if col not in df.columns:
+            df[col] = 0
+
+    df = df[['athlete_team_id', 'athlete_team_name', 'year'] + desired_cols]
+
+    return df
+
+
+def process_doubles_tournament_finishes():
+    """Main processing pipeline."""
+
+    pivot_df = clean_and_transform_data_doubles()
+    order_grade_levels = ["Junior", "G3", "Super 100", "Super 300", "Super 500", "Super 750", "Super 1000", "Grade 1"]
+    order_position_stages = ["LT_R32", "R32", "R16", "QF", "SF", "F"]
+
+
+    final_df = make_static_columns_doubles(pivot_df, order_grade_levels, order_position_stages)
+    final_df = final_df.rename(columns={'year': 'tournament_year'})
+    final_df = final_df.rename(columns={'athlete_team_id': 'athlete_id','athlete_team_name':'athlete_name'})
+    final_df = final_df.drop_duplicates(subset=['athlete_id', 'tournament_year'], keep='last')
+
+    return final_df
+
