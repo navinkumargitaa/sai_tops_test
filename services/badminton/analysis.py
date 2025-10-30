@@ -563,10 +563,55 @@ def add_notable_wins_and_losses(df):
         else 'Won',
         axis=1
     )
-    df = df.sort_values(by='start_date', ascending=False)
 
     df.loc[(df['round_name'] == 'Final') & (df['win_flag'] == 'Won') & (df['lost_to'] == 'Won'),
     'lost_to'] = '1st Position'
+
+    # Ensure start_date is datetime
+    df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
+
+    # Map rounds
+    position_map = {
+        "R32": "R32",
+        "Qual. QF": "<R32",
+        "QF": "QF",
+        "R64": "<R32",
+        "R16": "R16",
+        "SF": "SF",
+        "R128": "<R32",
+        "R2": "<R32",
+        "R3": "<R32",
+        "R1": "<R32",
+        "Final": "F",
+        "Qual. R16": "<R32",
+        "Qual. R32": "<R32",
+        "Qual. R64": "<R32",
+        "R5": "R16",
+        "3/4": "SF",
+        "Semi-finals": "SF",
+        "Quarterfinals": "QF",
+        "Round of 16": "R16"
+    }
+
+    df["round_name"] = df["round_name"].replace(position_map)
+
+    # Round order
+    round_order = {
+        "<R32": 1,
+        "R32": 2,
+        "R16": 3,
+        "QF": 4,
+        "SF": 5,
+        "F": 6
+    }
+
+    df["round_number"] = df["round_name"].map(round_order).astype("Int64")
+
+    # Step 1: sort by tournament and round_number (highest first)
+    df = df.sort_values(
+        by=["start_date", "round_number"],
+        ascending=[False, False]
+    )
 
     return df
 
