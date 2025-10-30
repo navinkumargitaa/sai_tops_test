@@ -8,6 +8,7 @@ __author__ = "navin@gitaa.in"
 from sqlalchemy import Column, Integer, Date, String,Float
 
 from orm.archery.base import Base
+from sqlalchemy.dialects.mysql import LONGTEXT
 
 
 class NotableWinsSinglesFinal(Base):
@@ -31,7 +32,9 @@ class NotableWinsSinglesFinal(Base):
     athlete_world_ranking = Column(Integer)
     opponent_world_ranking = Column(Integer)
 
-    notable_win = Column(String(50))  # True if notable win, else False
+    notable_win = Column(LONGTEXT)
+
+    #notable_win = Column(String(255))  # True if notable win, else False
     lost_to = Column(String(255))
 
     def __repr__(self):

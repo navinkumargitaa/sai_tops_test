@@ -208,238 +208,6 @@ def compute_notable_win(row: pd.Series) -> str:
         return np.nan
 
 
-# def add_notable_win_column(df: pd.DataFrame) -> pd.DataFrame:
-#     """
-#     Adds a 'notable_win' column to the DataFrame using `compute_notable_win`.
-#
-#     Parameters
-#     ----------
-#     df : pd.DataFrame
-#         DataFrame containing match data with win/loss flags and ranks.
-#
-#     Returns
-#     -------
-#     pd.DataFrame
-#         Updated DataFrame including the 'notable_win' column.
-#     """
-#     def format_name_rank(name, rank):
-#         return f"{name} ({rank})"
-#     df["notable_win"] = df.apply(compute_notable_win, axis=1)
-#     # Ensure start_date is datetime
-#     df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
-#
-#     # Extract year after conversion
-#     df["year"] = df["start_date"].dt.year
-#     df['year'] = df['start_date'].dt.year
-#
-#     # Lost to
-#     df['lost_to'] = df.apply(
-#         lambda row: format_name_rank(row['opponent_name'], row['opponent_rank'])
-#         if row['win_flag'] == 'Loss'
-#         else 'Won',
-#         axis=1
-#     )
-#
-#     df.loc[(df['round_name'] == 'Final') & (df['win_flag'] == 'Win') & (df['lost_to'] == 'Won'),
-#     'lost_to'] = '1st Position'
-#
-#     # Ensure start_date is datetime
-#     df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
-#
-#     # Map rounds
-#     position_map = {
-#         "R32": "R32",
-#         "Qual. QF": "<R32",
-#         "QF": "QF",
-#         "R64": "<R32",
-#         "R16": "R16",
-#         "SF": "SF",
-#         "R128": "<R32",
-#         "R2": "<R32",
-#         "R3": "<R32",
-#         "R1": "<R32",
-#         "Final": "F",
-#         "Qual. R16": "<R32",
-#         "Qual. R32": "<R32",
-#         "Qual. R64": "<R32",
-#         "R5": "R16",
-#         "3/4": "SF",
-#         "Semi-finals": "SF",
-#         "Quarterfinals": "QF",
-#         "Round of 16": "R16"
-#     }
-#
-#     df["round_name"] = df["round_name"].replace(position_map)
-#
-#     # Round order
-#     round_order = {
-#         "<R32": 1,
-#         "R32": 2,
-#         "R16": 3,
-#         "QF": 4,
-#         "SF": 5,
-#         "F": 6
-#     }
-#
-#     df["round_number"] = df["round_name"].map(round_order).astype("Int64")
-#
-#     # Step 1: sort by tournament and round_number (highest first)
-#     df = df.sort_values(
-#         by=["start_date", "round_number"],
-#         ascending=[False, False]
-#     )
-#
-#     # # Get athlete's latest round per tournament (highest round_number)
-#     # latest_round_df = (
-#     #     df.loc[df.groupby(['athlete_id', 'tournament_id'])['round_number'].idxmax()]
-#     #     .reset_index(drop=True)
-#     # )
-#     #
-#     # latest_round_df = latest_round_df.drop(['tournament_match_id', 'round_number'], axis=1)
-#
-#     # 🧩 Step 2: Combine to one row per athlete per tournament
-#     latest_round_df = (
-#         df.groupby(["athlete_id", "tournament_id"])
-#         .agg(
-#             {
-#                 "athlete_name": "last",
-#                 "athlete_rank": "last",
-#                 "round_name": "last",  # latest round reached
-#                 "lost_to": lambda x: ", ".join(
-#                     x[(x != "Won") & (x != "1st Position")].dropna().unique()
-#                 )
-#                                      or "1st Position"
-#                 if "1st Position" in x.values
-#                 else "--",
-#                 "notable_win": lambda x: ", ".join(
-#                     [str(v) for v in x.dropna().unique() if v != "--"]
-#                 ),
-#                 "year": "last",
-#                 "start_date": "last",
-#             }
-#         )
-#         .reset_index()
-#     )
-#
-#     # Rename the column
-#     latest_round_df = latest_round_df.rename(columns={'athlete_rank': 'athlete_world_ranking','opponent_rank':'opponent_world_ranking'})
-#
-#     return latest_round_df
-
-
-# def add_notable_win_column(df: pd.DataFrame) -> pd.DataFrame:
-#     """
-#     Adds a 'notable_win' column and consolidates data into one row per athlete per tournament.
-#
-#     Returns
-#     -------
-#     pd.DataFrame
-#         Aggregated DataFrame with notable wins, lost to, and latest round details.
-#     """
-#
-#     def format_name_rank(name, rank):
-#         return f"{name} ({rank})" if pd.notna(rank) else str(name)
-#
-#     # Compute notable wins
-#     df["notable_win"] = df.apply(compute_notable_win, axis=1)
-#
-#     # Ensure datetime
-#     df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
-#     df["year"] = df["start_date"].dt.year
-#
-#     # Lost to
-#     df["lost_to"] = df.apply(
-#         lambda row: format_name_rank(row["opponent_name"], row["opponent_rank"])
-#         if row["win_flag"] == "Loss"
-#         else "Won",
-#         axis=1,
-#     )
-#
-#     # Mark champions
-#     df.loc[
-#         (df["round_name"] == "Final")
-#         & (df["win_flag"] == "Win")
-#         & (df["lost_to"] == "Won"),
-#         "lost_to",
-#     ] = "1st Position"
-#
-#     # Normalize round names
-#     position_map = {
-#         "R32": "R32",
-#         "Qual. QF": "<R32",
-#         "QF": "QF",
-#         "R64": "<R32",
-#         "R16": "R16",
-#         "SF": "SF",
-#         "R128": "<R32",
-#         "R2": "<R32",
-#         "R3": "<R32",
-#         "R1": "<R32",
-#         "Final": "F",
-#         "Qual. R16": "<R32",
-#         "Qual. R32": "<R32",
-#         "Qual. R64": "<R32",
-#         "R5": "R16",
-#         "3/4": "SF",
-#         "Semi-finals": "SF",
-#         "Quarterfinals": "QF",
-#         "Round of 16": "R16",
-#     }
-#     df["round_name"] = df["round_name"].replace(position_map)
-#
-#     # Round order
-#     round_order = {"<R32": 1, "R32": 2, "R16": 3, "QF": 4, "SF": 5, "F": 6}
-#     df["round_number"] = df["round_name"].map(round_order).astype("Int64")
-#
-#     # Sort
-#     df = df.sort_values(by=["athlete_id", "tournament_id", "round_number"])
-#
-#     # Aggregate safely
-#     latest_round_df = (
-#         df.groupby(["athlete_id", "tournament_id"], as_index=False)
-#         .agg(
-#             {
-#                 "athlete_name": "last",
-#                 "athlete_rank": "last",
-#                 "round_name": "last",
-#                 "lost_to": lambda x: (
-#                     "1st Position"
-#                     if "1st Position" in x.values
-#                     else ", ".join(
-#                         sorted(
-#                             set(
-#                                 v
-#                                 for v in x
-#                                 if isinstance(v, str)
-#                                 and v not in ["Won", "1st Position", "--"]
-#                             )
-#                         )
-#                     )
-#                     or "--"
-#                 ),
-#                 "notable_win": lambda x: ", ".join(
-#                     sorted(
-#                         set(
-#                             v
-#                             for v in x
-#                             if isinstance(v, str)
-#                             and v.strip() != ""
-#                             and v != "--"
-#                         )
-#                     )
-#                 ),
-#                 "year": "last",
-#                 "start_date": "last",
-#             }
-#         )
-#     )
-#
-#     # Rename columns
-#     latest_round_df = latest_round_df.rename(
-#         columns={"athlete_rank": "athlete_world_ranking"}
-#     )
-#
-#     return latest_round_df
 
 
 def add_notable_win_column(df: pd.DataFrame) -> pd.DataFrame:
@@ -545,13 +313,91 @@ def add_notable_win_column(df: pd.DataFrame) -> pd.DataFrame:
     latest_round_df = (
         df.groupby(["athlete_id", "tournament_id"], as_index=False)
         .agg(agg_dict)
-        .rename(columns={"athlete_rank": "athlete_world_ranking"})
+        .rename(columns={"athlete_rank": "athlete_world_ranking",'opponent_rank':'opponent_world_ranking'})
     )
-
+    latest_round_df = latest_round_df.drop(['tournament_match_id', 'round_number'], axis=1)
     return latest_round_df
 
 
 
+
+def merge_athlete_ranks_doubles(
+    df: pd.DataFrame,
+    df2: pd.DataFrame,
+    start_date_col: str = "start_date"
+) -> pd.DataFrame:
+    """
+    Adjust match start dates to the nearest Tuesday and merge athlete ranking data.
+
+    This function:
+      1. Converts start dates to the nearest Tuesday.
+      2. Reads and cleans the athlete ranking dataset.
+      3. Merges both athlete and opponent world rankings into the match dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Match dataset containing athlete and opponent IDs with start dates.
+    rank_file : str, optional
+        Path to the athlete rank CSV file (default is "athlete_rank.csv").
+    start_date_col : str, optional
+        Column name representing the match start date (default is "start_date").
+
+    Returns
+    -------
+    pd.DataFrame
+    DataFrame with adjusted start dates and merged athlete/opponent ranks.
+    """
+
+    # --- Step 1: Convert start_date to nearest Tuesday ---
+    df[start_date_col] = pd.to_datetime(df[start_date_col], errors='coerce')
+    weekday = df[start_date_col].dt.weekday
+    forward = (1 - weekday) % 7
+    backward = forward - 7
+    days_shift = np.where(forward <= np.abs(backward), forward, backward)
+    df[start_date_col] = (
+        df[start_date_col] + pd.to_timedelta(days_shift, unit='D')
+    ).dt.normalize()
+
+    # --- Step 2: Read and clean athlete ranking dataset ---
+    rank_df = df2
+    rank_df = rank_df.drop(columns=['Unnamed: 0'], errors='ignore')
+    rank_df['date'] = pd.to_datetime(rank_df['date'], errors='coerce').dt.normalize()
+
+    rank_lookup = rank_df[['team_id', 'date', 'world_ranking']].rename(
+        columns={
+            'team_id': 'player_id',
+            'date': 'tuesday_date',
+            'world_ranking': 'ranking'
+        }
+    )
+
+    # --- Step 3: Merge athlete rank ---
+    df = df.merge(
+        rank_lookup,
+        how='left',
+        left_on=['athlete_team_id', start_date_col],
+        right_on=['player_id', 'tuesday_date']
+    ).rename(columns={'ranking': 'athlete_team_rank'})
+
+    df = df.drop(columns=[c for c in ['player_id', 'tuesday_date'] if c in df.columns])
+
+    # --- Step 4: Merge opponent rank ---
+    df = df.merge(
+        rank_lookup,
+        how='left',
+        left_on=['opponent_team_id', start_date_col],
+        right_on=['player_id', 'tuesday_date']
+    ).rename(columns={'ranking': 'opponent_team_rank'})
+
+    df = df.drop(columns=[c for c in ['player_id', 'tuesday_date'] if c in df.columns])
+
+    # --- Step 5: Final clean-up ---
+    df[start_date_col] = df[start_date_col].dt.date
+    df['athlete_team_rank'] = pd.to_numeric(df['athlete_team_rank'], errors='coerce').astype('Int64')
+    df['opponent_team_rank'] = pd.to_numeric(df['opponent_team_rank'], errors='coerce').astype('Int64')
+
+    return df
 
 def process_singles_notable_wins():
     data = pd.read_sql_query(read_singles_notable_wins(), con=sai_db_engine)
@@ -619,13 +465,121 @@ def add_doubles_win_flag_and_team_names(df):
     ]
     return df[final_cols]
 
+def add_notable_win_column_doubles(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Adds a 'notable_win' column and consolidates data into one row per athlete per tournament,
+    while retaining all columns from the original DataFrame.
+
+    Returns
+    -------
+    pd.DataFrame
+        Aggregated DataFrame with notable wins, lost to, and all other columns retained.
+    """
+
+    def format_name_rank(name, rank):
+        return f"{name} ({rank})" if pd.notna(rank) else str(name)
+
+    # Step 1: Compute notable wins
+    df["notable_win"] = df.apply(compute_notable_win, axis=1)
+
+    # Step 2: Ensure datetime
+    df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
+    df["year"] = df["start_date"].dt.year
+
+    # Step 3: Lost to logic
+    df["lost_to"] = df.apply(
+        lambda row: format_name_rank(row["opponent_team_name"], row["opponent_team_rank"])
+        if row["win_flag"] == "Lost"
+        else "Won",
+        axis=1,
+    )
+
+    # Step 4: Mark champions
+    df.loc[
+        (df["round_name"] == "Final")
+        & (df["win_flag"] == "Win")
+        & (df["lost_to"] == "Won"),
+        "lost_to",
+    ] = "1st Position"
+
+    # Step 5: Normalize round names
+    position_map = {
+        "R32": "R32",
+        "Qual. QF": "<R32",
+        "QF": "QF",
+        "R64": "<R32",
+        "R16": "R16",
+        "SF": "SF",
+        "R128": "<R32",
+        "R2": "<R32",
+        "R3": "<R32",
+        "R1": "<R32",
+        "Final": "F",
+        "Qual. R16": "<R32",
+        "Qual. R32": "<R32",
+        "Qual. R64": "<R32",
+        "R5": "R16",
+        "3/4": "SF",
+        "Semi-finals": "SF",
+        "Quarterfinals": "QF",
+        "Round of 16": "R16",
+    }
+    df["round_name"] = df["round_name"].replace(position_map)
+
+    # Step 6: Round order
+    round_order = {"<R32": 1, "R32": 2, "R16": 3, "QF": 4, "SF": 5, "F": 6}
+    df["round_number"] = df["round_name"].map(round_order).astype("Int64")
+
+    # Step 7: Sort
+    df = df.sort_values(by=["athlete_id", "tournament_id", "round_number"])
+
+    # Step 8: Aggregate (combine Lost To, Notable Wins) but retain all other cols
+    agg_dict = {col: "last" for col in df.columns if col not in ["lost_to", "notable_win"]}
+
+    agg_dict.update({
+        "lost_to": lambda x: (
+            "1st Position"
+            if "1st Position" in x.values
+            else ", ".join(
+                sorted(
+                    set(
+                        v
+                        for v in x
+                        if isinstance(v, str)
+                        and v not in ["Won", "1st Position", "--"]
+                    )
+                )
+            )
+            or "--"
+        ),
+        "notable_win": lambda x: ", ".join(
+            sorted(
+                set(
+                    v
+                    for v in x
+                    if isinstance(v, str)
+                    and v.strip() != ""
+                    and v != "--"
+                )
+            )
+        ),
+    })
+
+    latest_round_df = (
+        df.groupby(["athlete_id", "tournament_id"], as_index=False)
+        .agg(agg_dict)
+        .rename(columns={"athlete_team_rank": "athlete_team_world_ranking",'opponent_team_rank':'opponent_team_world_ranking'})
+    )
+    latest_round_df = latest_round_df.drop(['round_number'], axis=1)
+    return latest_round_df
+
 
 def process_doubles_notable_wins():
     data = pd.read_sql_query(read_doubles_notable_wins(), con=sai_db_engine)
     data_rank = pd.read_sql_query(read_doubles_ranking_table(), con=sai_db_engine)
 
     df = add_doubles_win_flag_and_team_names(data)
-    df = merge_athlete_ranks(df, data_rank)
-    final_df = add_notable_win_column(df)
+    df = merge_athlete_ranks_doubles(df, data_rank)
+    final_df = add_notable_win_column_doubles(df)
     return final_df
 
