@@ -597,8 +597,27 @@ def process_doubles_notable_wins():
     df = add_doubles_win_flag_and_team_names(data)
     df = merge_athlete_ranks_doubles(df, data_rank)
     final_df = add_notable_win_column_doubles(df)
+
+    # Step 4: Ensure athlete_name is constant for each athlete_id
+    name_map = (
+        final_df.groupby('athlete_id')['athlete_team_name']
+        .agg(lambda x: x.mode().iat[0] if not x.mode().empty else x.iloc[0])
+        .to_dict()
+    )
+    final_df['athlete_team_name'] = final_df['athlete_id'].map(name_map)
+
+    pair_map = {
+        'Dhruv Kapila & Tanisha Crasto': 'Dhruv Kapila & Tanisha Crasto',
+        'Satwiksairaj RANKIREDDY & Chirag SHETTY': 'Satwiksairaj Rankireddy & Chirag Shetty',
+        'Hariharan AMSAKARUNAN & Ruban Kumar RETHINASABAPATHI': 'Hariharan Amsakarunan & Ruban Kumar Rethinasabapathi',
+        'Treesa Jolly & Gayatri Gopichand Pullela': 'Treesa Jolly & Gayatri Gopichand Pullela'
+    }
+
+    final_df['athlete_team_name'] = final_df['athlete_team_name'].replace(pair_map)
+
     final_df['start_date'] = pd.to_datetime(final_df['start_date'])
     final_df = final_df.sort_values(by='start_date', ascending=False)
+
     return final_df
 
 def clean_and_transform_data():
@@ -700,22 +719,37 @@ def clean_and_transform_data_doubles():
     new_data['round_name'] = new_data['round_name'].replace(position_map)
     new_data['tournament_grade'] = new_data['tournament_grade'].replace('final', '1000')
 
+    # Step 4: Ensure athlete_name is constant for each athlete_id
+    name_map = (
+        new_data.groupby('athlete_team_id')['athlete_team_name']
+        .agg(lambda x: x.mode().iat[0] if not x.mode().empty else x.iloc[0])
+        .to_dict()
+    )
+    new_data['athlete_team_name'] = new_data['athlete_team_id'].map(name_map)
 
-    # Create pivot table
-    pivot_df = new_data.pivot_table(
-        index=['athlete_team_id', 'athlete_team_name', 'year', 'tournament_grade'],
-        columns='round_name',
-        aggfunc='size',
+    # Step 5: Aggregate before pivot to avoid duplicates
+    new_data['count'] = 1
+    grouped = (
+        new_data.groupby(['athlete_team_id', 'athlete_team_name', 'year', 'tournament_grade', 'round_name'], as_index=False)['count']
+        .sum()
+    )
+
+    # Step 6: Create pivot table
+    pivot_df = grouped.pivot_table(
+        index=['athlete_team_id', 'athlete_team_name', 'year'],
+        columns=['tournament_grade', 'round_name'],
+        values='count',
+        aggfunc='sum',
         fill_value=0
     )
 
-    # Unstack grade level into columns
-    pivot_df = pivot_df.unstack(level='tournament_grade', fill_value=0)
+    # Step 7: Flatten MultiIndex columns
+    pivot_df.columns = [f"{grade}_{pos}" for grade, pos in pivot_df.columns]
 
-    # Flatten MultiIndex columns
-    pivot_df.columns = [f"{grade}_{pos}" for pos, grade in pivot_df.columns]
+    # Step 8: Reset index and return
+    pivot_df = pivot_df.reset_index()
 
-    return pivot_df.reset_index()
+    return pivot_df
 
 def make_static_columns_doubles(df, order_grade_levels, order_position_stages):
     """Ensure all grade-position combinations exist and reorder columns."""
